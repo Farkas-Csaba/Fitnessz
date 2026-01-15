@@ -1,6 +1,18 @@
-@Fitnessz.WebApi_HostAddress = http://localhost:5001
+POST {{hostaddress}}/ForumThread
+Content-Type: application/json
 
-GET {{Fitnessz.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
+{
+  "Title" : "My first proper fitness thread",
+  "Content" : "This is the body of the thread"
+}
 ###
+GET {{hostaddress}}/ForumThread/My first proper fitness thread
+###
+GET {{hostaddress}}/ForumThread/xyz
+###
+POST {{hostaddress}}/ForumThread
+Content-Type: application/json
+
+{
+  "Title" : ""
+}

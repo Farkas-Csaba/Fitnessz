@@ -1,4 +1,5 @@
 using Fitnessz.Common.DataContext;
+using Fitnessz.WebApi.Repositories;
 
 namespace Fitnessz.WebApi;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public class Program
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        builder.Services.AddScoped<IThreadRepository, ForumThreadRepository>();
 
         var app = builder.Build();
 
