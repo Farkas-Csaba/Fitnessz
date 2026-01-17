@@ -6,6 +6,14 @@ Content-Type: application/json
   "Content" : "This is the body of the thread"
 }
 ###
+POST {{hostaddress}}/ForumThread
+Content-Type: application/json
+
+{
+  "Title" : "My second proper fitness thread",
+  "Content" : "This is the body of the thread"
+}
+###
 GET {{hostaddress}}/ForumThread/My first proper fitness thread
 ###
 GET {{hostaddress}}/ForumThread/xyz
@@ -16,3 +24,56 @@ Content-Type: application/json
 {
   "Title" : ""
 }
+###
+GET {{hostaddress}}/ForumPost/1/posts
+Content-Type: application/json
+###
+POST {{hostaddress}}/ForumPost/1/posts
+Content-Type: application/json
+
+{
+    "Content" : "My reply is this"
+}
+###
+POST {{hostaddress}}/ForumPost/1/posts
+Content-Type: application/json
+
+{
+  "Content" : "My reply is now that"
+}
+###
+POST {{hostaddress}}/ForumPost/1/posts
+Content-Type: application/json
+
+{
+  "Content" : ""
+}
+###
+PUT {{hostaddress}}/ForumPost/1/posts/7
+Content-Type: application/json
+
+{
+  "Content" : "My reply has been updated"
+}
+###
+GET {{hostaddress}}/ForumPost/1/posts
+###
+POST {{hostaddress}}/ForumPost/2/posts
+Content-Type: application/json
+
+{
+  "Content" : "This reply belongs to the second thread"
+}
+###
+PUT {{hostaddress}}/ForumPost/2/posts/9
+Content-Type: application/json
+
+{
+  "Content" : "This will be accepted first and also second time but then with no change"
+}
+###
+GET {{hostaddress}}/ForumPost/1/posts
+###
+GET {{hostaddress}}/ForumPost/posts/4
+###
+DELETE {{hostaddress}}/ForumPost/1/posts/4

@@ -9,13 +9,13 @@ namespace Fitnessz.WebApi.Controllers;
 [Route("[controller]")]
 public class ForumThreadController : ControllerBase
 {
-    private readonly IThreadRepository repo;
+    private readonly IThreadRepository threadRepo;
     private readonly ILogger<ForumThreadController> _logger;
 
-    public ForumThreadController(ILogger<ForumThreadController> logger, IThreadRepository repo)
+    public ForumThreadController(ILogger<ForumThreadController> logger, IThreadRepository tRepo)
     {
         _logger = logger;
-        this.repo = repo;
+        threadRepo = tRepo;
     }
 
     [HttpGet("{title}")]
@@ -24,7 +24,7 @@ public class ForumThreadController : ControllerBase
     public async Task<IActionResult> GetThread([FromRoute, Required, MinLength(1)]string title)
     {
         
-        ForumThread? t =  await repo.RetrieveAsync(title);
+        ForumThread? t =  await threadRepo.RetrieveAsync(title);
         if (t == null)
         {
             return NotFound();
@@ -38,7 +38,7 @@ public class ForumThreadController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateThread(ForumThread thread)
     {
-        ForumThread? t = await repo.AddAsync(thread);
+        ForumThread? t = await threadRepo.AddAsync(thread);
         if (t == null)
         {
             return Conflict("A thread with this title already exists");

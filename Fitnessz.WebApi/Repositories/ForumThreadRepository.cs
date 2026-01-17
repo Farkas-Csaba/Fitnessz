@@ -8,6 +8,7 @@ public interface IThreadRepository
 {
     Task<ForumThread?> RetrieveAsync(string title);
     Task<ForumThread?> AddAsync(ForumThread thread);
+    Task<bool> ExistsAsync(int threadId);
 }
 
 public class ForumThreadRepository : IThreadRepository
@@ -43,5 +44,10 @@ public class ForumThreadRepository : IThreadRepository
         }
 
         return null;
+    }
+
+    public async Task<bool> ExistsAsync(int threadId)
+    {
+        return await db.ForumThreads.AnyAsync(t => t.ThreadId == threadId);
     }
 }
