@@ -9,8 +9,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("connectionString defaultConnection not found");
-        builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString));
+        var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString defaultConnection not found");
+        builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
     
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
