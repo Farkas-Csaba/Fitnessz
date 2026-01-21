@@ -15,4 +15,14 @@ public class ForumDbContext : DbContext
    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
    {
    }
+
+   protected override void OnModelCreating(ModelBuilder modelBuilder)
+   {
+      modelBuilder.Entity<User>()
+         .HasIndex(u => u.UserName)
+         .IsUnique();
+      modelBuilder.Entity<User>()
+         .HasIndex(u => u.Email)
+         .IsUnique();
+   }
 }

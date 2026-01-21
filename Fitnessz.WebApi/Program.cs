@@ -17,6 +17,7 @@ public class Program
         builder.Services.AddOpenApi();
         builder.Services.AddScoped<IThreadRepository, ForumThreadRepository>();
         builder.Services.AddScoped<IForumPostRepository, ForumPostRepository>();
+        builder.Services.AddScoped<IForumUserRepository, ForumUserRepository>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

@@ -77,3 +77,29 @@ GET {{hostaddress}}/ForumPost/1/posts
 GET {{hostaddress}}/ForumPost/posts/4
 ###
 DELETE {{hostaddress}}/ForumPost/1/posts/4
+###
+POST {{hostaddress}}/ForumUser/register
+Content-Type: application/json
+
+{
+  "UserName" : "Farkas Csaba",
+  "Email" : "farkascsabi123@gmail.com",
+  "password" : "randomPa$$"
+}
+###
+POST {{hostaddress}}/ForumUser/login
+Content-Type: application/json
+
+{
+  "UserName" : "Farkas Csaba",
+  "Password" : "randomPa$$"
+}
+###
+POST {{hostaddress}}/ForumUser/register
+Content-Type: application/json
+
+{
+  "UserName" : "Not Farkas Csaba",
+  "Email" : "farkascsabi123@gmail.com",
+  "Password" : "RandomPass"
+}
