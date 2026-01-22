@@ -482,3 +482,16 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+#Rsa generated keys are stored in xml temporarily for development therefore i don't commit xml
+*.xml
+
+#enviroment variables
+*.private.env.json
+
+#User secrets
+secrets.json
+
+#appsettings
+appsettings.json
+

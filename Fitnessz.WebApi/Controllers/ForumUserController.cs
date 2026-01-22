@@ -1,6 +1,10 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fitnessz.WebApi.Controllers;
 [ApiController]
@@ -8,10 +12,12 @@ namespace Fitnessz.WebApi.Controllers;
 public class ForumUserController : ControllerBase
 {
     private readonly IForumUserRepository userRepo;
+    private readonly RsaSecurityKey _signingKey;
 
-    public ForumUserController(IForumUserRepository uRepo)
+    public ForumUserController(IForumUserRepository uRepo, RsaSecurityKey signingKey)
     {
         userRepo = uRepo;
+        _signingKey = signingKey;
     }
 
     [HttpPost("register")]
@@ -51,16 +57,42 @@ public class ForumUserController : ControllerBase
         {
             return Unauthorized("Invalid credentials");
         }
-        // Later I will return jwt token here
+
+        var token = CreateToken(user, _signingKey);
+        
         return Ok(new
         {
-            Message = "Login successful",
-            UserId = user.UserId,
-            UserName = user.UserName
+            Token = token
         });
     }
 
+    public string CreateToken(User user, RsaSecurityKey privateKey)
+    {
+        List<Claim> claims = new List<Claim> // here can we not use the "iss" "subject" claims?
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Role, "Member") //Adding a role is essential for a forum
+        };
+        var creds = new SigningCredentials(privateKey, SecurityAlgorithms.RsaSha256);
+
+        var tokenDescriptor = new SecurityTokenDescriptor()
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.Now.AddHours(2), //Questionable token should ezpire sonner !
+            SigningCredentials = creds,
+            Issuer = "Fitnessz.WebApi",
+            Audience = "Fitnessz.Clients"
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    //Dto for registering the user the Db contains PasswordHash not Password 
     public record RegisterDto(string UserName, string Email, string Password);
+    //Dto for registering the user the Db contains PasswordHash not Password 
     public record LoginDto(string UserName, string Password);
 
 }

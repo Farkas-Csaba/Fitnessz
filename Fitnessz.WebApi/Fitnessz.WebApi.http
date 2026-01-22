@@ -1,5 +1,6 @@
 POST {{hostaddress}}/ForumThread
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
   "Title" : "My first proper fitness thread",
@@ -72,7 +73,7 @@ Content-Type: application/json
   "Content" : "This will be accepted first and also second time but then with no change"
 }
 ###
-GET {{hostaddress}}/ForumPost/1/posts
+GET {{hostaddress}}/ForumPost/3/posts
 ###
 GET {{hostaddress}}/ForumPost/posts/4
 ###
@@ -94,6 +95,7 @@ Content-Type: application/json
   "UserName" : "Farkas Csaba",
   "Password" : "randomPa$$"
 }
+
 ###
 POST {{hostaddress}}/ForumUser/register
 Content-Type: application/json
@@ -102,4 +104,12 @@ Content-Type: application/json
   "UserName" : "Not Farkas Csaba",
   "Email" : "farkascsabi123@gmail.com",
   "Password" : "RandomPass"
+}
+###
+POST {{hostaddress}}/ForumPost/3/posts
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "Content" : "With token"
 }

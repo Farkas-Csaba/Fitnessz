@@ -12,6 +12,6 @@ public class Post
     
     //navigation properties no lazy loading
     public ForumThread? Thread { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; } //Changed to nullable after Dto's are in place could reconsider this
 
 }

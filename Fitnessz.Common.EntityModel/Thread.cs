@@ -14,5 +14,5 @@ public class ForumThread
     
     //navigation properties
     public ICollection<Post>? Posts { get; set; } = new List<Post>();
-    public User User { get; set; } = null!; //Can this actuaally be null?
+    public User? User { get; set; } //Changed to nullable after Dto's are in place could reconsider this
 }

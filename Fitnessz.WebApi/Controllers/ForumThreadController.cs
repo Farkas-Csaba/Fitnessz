@@ -3,6 +3,9 @@ using Fitnessz.Common.EntityModel;
 using Microsoft.AspNetCore.Mvc;
 using Fitnessz.WebApi.Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Fitnessz.WebApi.Controllers;
 
 [ApiController]
@@ -32,12 +35,20 @@ public class ForumThreadController : ControllerBase
 
         return Ok(t);
     }
-
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateThread(ForumThread thread)
     {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString))
+        {
+            return Unauthorized("Invalid Token");
+        }
+
+        thread.UserId = int.Parse(userIdString);
         ForumThread? t = await threadRepo.AddAsync(thread);
         if (t == null)
         {

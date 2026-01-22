@@ -1,5 +1,9 @@
+using System.Text;
 using Fitnessz.Common.DataContext;
 using Fitnessz.WebApi.Repositories;
+using Fitnessz.WebApi.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fitnessz.WebApi;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +15,35 @@ public class Program
 
         var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString defaultConnection not found");
         builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
-    
+
+        var rsaKey = Keyhelper.GetPrivateKey(); // 1. Get the Key (In production, this would be the Public Key)
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Auth failed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    }
+                };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    //switched from symmetric to rsa key
+                    IssuerSigningKey = rsaKey,
+                    ValidateIssuer = false, //true in production!
+                    ValidateAudience = false, //true in production
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+        // 2. Give it to the Dependency Injection container 
+        // so the Login Controller can "ask" for it.
+        builder.Services.AddSingleton(rsaKey);
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -28,9 +60,9 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        
+        app.UseAuthentication();
         app.UseAuthorization();
-
-
         app.MapControllers();
 
         app.Run();

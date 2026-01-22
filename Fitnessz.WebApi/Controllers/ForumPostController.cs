@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,13 +46,20 @@ public class ForumPostController : ControllerBase
         var p = await postRepo.GetPostsByThreadIdAsync(threadId);
         return Ok(p);
     }
-
+    [Authorize]
     [HttpPost("{threadId}/posts")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreatePostAsync(int threadId ,[FromBody] Post post)
     {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString))
+        {
+            return Unauthorized("Invalid Token");
+        }
+        post.UserId = int.Parse(userIdString); //maybe should use tryparse() here?
         if (!await threadRepo.ExistsAsync(threadId))
         {
             return NotFound();
@@ -63,6 +72,7 @@ public class ForumPostController : ControllerBase
             return BadRequest("Couldn't create post");
         }
 
+        
         return CreatedAtAction(
             nameof(GetPostById),
             new { id = p.PostId },
