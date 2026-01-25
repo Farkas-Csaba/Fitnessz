@@ -9,6 +9,8 @@ public interface IThreadRepository
     Task<ForumThread?> RetrieveAsync(int id);
     Task<ForumThread?> AddAsync(ForumThread thread);
     Task<bool> ExistsAsync(int threadId);
+    Task DeleteAsync(ForumThread thread);
+
 }
 
 public class ForumThreadRepository : IThreadRepository
@@ -48,6 +50,12 @@ public class ForumThreadRepository : IThreadRepository
 
     public async Task<bool> ExistsAsync(int threadId)
     {
-        return await db.ForumThreads.AnyAsync(t => t.ThreadId == threadId);
+        return await db.ForumThreads.AnyAsync(t => t.ThreadId == threadId); //is this null reference normal? Look into it
+    }
+
+    public async Task DeleteAsync(ForumThread thread)
+    {
+        db.Remove(thread);
+        await db.SaveChangesAsync();
     }
 }

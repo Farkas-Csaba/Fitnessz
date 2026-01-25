@@ -78,4 +78,38 @@ public class ForumThreadController : ControllerBase
             new { id = response.ThreadId }, 
             response);
     }
+
+    [Authorize]
+    [HttpDelete("{threadId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteThread(int threadId)
+    {
+        string? stringUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(stringUserId))
+        {
+            return Unauthorized("Invalid token credential");
+        }
+
+        int userId = int.Parse(stringUserId);
+        
+        ForumThread? existingThread = await threadRepo.RetrieveAsync(threadId);
+        if (existingThread == null)
+        {
+            return NotFound("Post does not exist");
+        }
+        bool isAdmin = User.IsInRole("Admin");
+        bool isOwner = existingThread.UserId == userId;
+
+        if (!isOwner && !isAdmin)
+        {
+            return Forbid();
+        }
+
+        await threadRepo.DeleteAsync(existingThread);
+
+        return NoContent();
+    }
 }

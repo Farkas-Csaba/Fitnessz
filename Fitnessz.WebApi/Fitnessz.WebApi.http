@@ -67,13 +67,6 @@ Content-Type: application/json
   "Content" : "This reply belongs to the second thread"
 }
 ###
-PUT {{hostaddress}}/ForumPost/2/posts/9
-Content-Type: application/json
-
-{
-  "Content" : "This will be accepted first and also second time but then with no change"
-}
-###
 GET {{hostaddress}}/ForumPost/5/posts
 ###
 GET {{hostaddress}}/ForumPost/posts/4
@@ -107,10 +100,13 @@ Content-Type: application/json
   "Password" : "RandomPass"
 }
 ###
-POST {{hostaddress}}/ForumPost/3/posts
+POST {{hostaddress}}/ForumPost/5/posts
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
   "Content" : "With token"
 }
+###
+DELETE {{hostaddress}}/ForumThread/5
+Authorization: Bearer {{authToken}}
