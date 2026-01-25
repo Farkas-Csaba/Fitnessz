@@ -9,6 +9,7 @@ Authorization: Bearer {{authToken}}
 ###
 POST {{hostaddress}}/ForumThread
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
   "Title" : "My second proper fitness thread",
@@ -16,7 +17,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{hostaddress}}/ForumThread/5
+GET {{hostaddress}}/ForumThread/6
 ###
 POST {{hostaddress}}/ForumThread
 Content-Type: application/json

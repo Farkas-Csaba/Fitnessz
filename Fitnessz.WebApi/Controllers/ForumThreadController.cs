@@ -37,6 +37,7 @@ public class ForumThreadController : ControllerBase
         {
             ThreadId = thread.ThreadId,
             Title = thread.Title,
+            Content = thread.Content,
             AuthorName = thread.User?.UserName ?? "Unknown" //to include this we will need to use Include(t => t.User) in RetrieveAsync
         };
         return Ok(response);
@@ -58,7 +59,8 @@ public class ForumThreadController : ControllerBase
         ForumThread thread = new()
         {
             UserId = int.Parse(userIdString), //check this later, is this fine here, what about TryParse()
-            Title = dto.Title
+            Title = dto.Title,
+            Content = dto.Content
         };
         
         ForumThread? createdThread = await threadRepo.AddAsync(thread);
@@ -71,7 +73,8 @@ public class ForumThreadController : ControllerBase
         {
             AuthorName = userName,
             Title = createdThread.Title,
-            ThreadId = createdThread.ThreadId
+            ThreadId = createdThread.ThreadId,
+            Content = createdThread.Content  //this changed after vadding Content
         };
         return CreatedAtAction(
             nameof(GetThreadById),
