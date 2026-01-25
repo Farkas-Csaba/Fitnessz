@@ -13,7 +13,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString defaultConnection not found");
+        var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString postgresConnection not found");
         builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
 
         var rsaKey = Keyhelper.GetPrivateKey(); // 1. Get the Key (In production, this would be the Public Key)

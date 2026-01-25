@@ -6,7 +6,7 @@ namespace Fitnessz.WebApi.Repositories;
 
 public interface IThreadRepository
 {
-    Task<ForumThread?> RetrieveAsync(string title);
+    Task<ForumThread?> RetrieveAsync(int id);
     Task<ForumThread?> AddAsync(ForumThread thread);
     Task<bool> ExistsAsync(int threadId);
 }
@@ -20,15 +20,15 @@ public class ForumThreadRepository : IThreadRepository
         db = injectedDb;
     }
 
-    public async Task<ForumThread?> RetrieveAsync(string title)
+    public async Task<ForumThread?> RetrieveAsync(int id)
     {
-        return await db.ForumThreads.FirstOrDefaultAsync(t => t.Title == title);
+        return await db.ForumThreads.FirstOrDefaultAsync(t => t.ThreadId == id);
 
     }
 
     public async Task<ForumThread?> AddAsync(ForumThread inThread)
     {
-        ForumThread? exists = await RetrieveAsync(inThread.Title);
+        ForumThread? exists = await RetrieveAsync(inThread.ThreadId);
         if (exists != null)
         {
             throw new ArgumentException("Thread already exists");

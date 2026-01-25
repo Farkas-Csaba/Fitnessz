@@ -4,6 +4,7 @@ using Fitnessz.WebApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Fitnessz.WebApi.DTOs.PostDto;
 
 namespace Fitnessz.WebApi.Controllers;
 [ApiController]
@@ -25,13 +26,19 @@ public class ForumPostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPostById(int id)
     {
-        Post? p = await postRepo.GetPostByIdAsync(id);
+        Post? p = await postRepo.GetPostByIdWithUserAsync(id);
         if (p == null)
         {
             return NotFound();
         }
 
-        return Ok(p);
+        return Ok(new PostResponseDto()
+        {
+            AuthorName = p.User.UserName, //this should never be null why is it like this
+            Content = p.Content, //same here
+            PostId = p.PostId,
+            CreatedAt = p.CreatedAt
+        });
     }
     [HttpGet("{threadId}/posts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,8 +50,17 @@ public class ForumPostController : ControllerBase
             return NotFound();
         }
 
-        var p = await postRepo.GetPostsByThreadIdAsync(threadId);
-        return Ok(p);
+        var posts = await postRepo.GetPostsByThreadIdAsync(threadId);
+
+        var response = posts.Select(p => new PostResponseDto()
+        {
+            AuthorName = p.User?.UserName ?? "Anonymus",
+            Content = p.Content,
+            CreatedAt = p.CreatedAt,
+            PostId = p.PostId
+            
+        });
+        return Ok(response);
     }
     [Authorize]
     [HttpPost("{threadId}/posts")]
@@ -52,72 +68,110 @@ public class ForumPostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> CreatePostAsync(int threadId ,[FromBody] Post post)
+    public async Task<IActionResult> CreatePostAsync(int threadId ,[FromBody] PostCreateDto dto)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userIdString))
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userName = User.Identity?.Name;
+        if ((string.IsNullOrEmpty(userIdString)) || (string.IsNullOrEmpty(userName)))
         {
             return Unauthorized("Invalid Token");
         }
-        post.UserId = int.Parse(userIdString); //maybe should use tryparse() here?
         if (!await threadRepo.ExistsAsync(threadId))
         {
             return NotFound();
         }
 
-        post.ThreadId = threadId;
-        Post? p = await postRepo.CreatePostAsync(post);
+        Post? createdPost = new Post()
+        {
+            Content = dto.Content,
+            ThreadId = threadId,
+            UserId = int.Parse(userIdString)
+        };
+        Post? p = await postRepo.CreatePostAsync(createdPost);
         if (p == null)
         {
             return BadRequest("Couldn't create post");
         }
 
+        PostResponseDto response = new PostResponseDto()
+        {
+            PostId = p.PostId,
+            AuthorName = userName,
+            Content = p.Content,
+            CreatedAt = p.CreatedAt
+        };
         
         return CreatedAtAction(
             nameof(GetPostById),
-            new { id = p.PostId },
-            p);
+            new { id = response.PostId },
+            response);
     }
-
+    [Authorize]
     [HttpPut("{threadId}/posts/{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdatePost(int threadId, int id, [FromBody] Post post)
+    public async Task<IActionResult> UpdatePost(int threadId, int id, [FromBody] PostUpdateDto postDto)
     {
-        if (post.PostId!=0 && id != post.PostId)
+        string? stringUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(stringUserId))
         {
-            return BadRequest("The id in the Json body and the url do not match");
-        }
-        if (!await threadRepo.ExistsAsync(threadId))
-        {
-            return NotFound("Thread not found");
+            return Unauthorized("Invalid token credentials");
         }
 
-        Post? p = await postRepo.UpdatePostAsync(threadId,id, post);
+        int currentUserId = int.Parse(stringUserId);
+        
+        Post? existingPost = await postRepo.GetPostByIdWithUserAsync(id);
 
-        if (p == null)
+        if (existingPost == null) return NotFound("Post not found");
+       
+        if (existingPost.ThreadId!=threadId)
         {
-            return NotFound("Post not found in this thread");
+            return NotFound("Post does not belong to this thread");
         }
+
+        bool isOwner = existingPost.UserId == currentUserId;
+        bool isAdmin = User.IsInRole("admin");
+        if (!isOwner && !isAdmin) //Roles, get back to this later 
+        {
+            return Forbid();
+        }
+
+        existingPost.Content = postDto.Content;
+        await postRepo.UpdatePostAsync(existingPost);
+
         return NoContent();
     }
-
+    [Authorize]
     [HttpDelete("{threadId}/posts/{postId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeletePost(int threadId, int postId)
     {
-        bool? deleted = await postRepo.DeletePostAsync(threadId, postId);
-
-        if (deleted == null)
+        string? stringUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(stringUserId))
         {
-            return NotFound("Couldn't delete post");
+            return Unauthorized("Invalid token credentials");
         }
 
-        if (deleted == false)
+        int currentUserId = int.Parse(stringUserId);
+        
+        
+        Post? existingPost = await postRepo.GetPostByIdWithUserAsync(postId);
+
+        if (existingPost == null || existingPost.ThreadId != threadId)
         {
-            return StatusCode(500, "Couldn't delete comment due to server error");
+            return NotFound();
         }
+        
+        bool isOwner = existingPost.UserId == currentUserId;
+        bool isAdmin = User.IsInRole("admin");
+        if (!isOwner && !isAdmin) //Roles, get back to this later 
+        {
+            return Forbid();
+        }
+
+        await postRepo.DeletePostAsync(existingPost);
         return NoContent();
     }
 }

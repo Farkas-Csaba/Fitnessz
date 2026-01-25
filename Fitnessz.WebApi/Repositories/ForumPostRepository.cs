@@ -8,9 +8,9 @@ public interface IForumPostRepository
 {
     Task<IEnumerable<Post>?> GetPostsByThreadIdAsync(int threadId);
     Task<Post?> CreatePostAsync(Post post);
-    Task<Post?> GetPostByIdAsync(int postId);
-    Task<Post?> UpdatePostAsync(int threadId, int id,Post post);
-    Task<bool?> DeletePostAsync(int threadId, int postId);
+    Task<Post?> GetPostByIdWithUserAsync(int postId);
+    Task UpdatePostAsync(Post post);
+    Task DeletePostAsync(Post post);
 }
 
 public class ForumPostRepository : IForumPostRepository
@@ -23,9 +23,9 @@ public class ForumPostRepository : IForumPostRepository
     public async Task<IEnumerable<Post>?> GetPostsByThreadIdAsync(int threadId) 
     {
         return await db.Posts
+            .Include(p => p.User)
             .Where(p => p.ThreadId == threadId)
             .ToListAsync();
-        
     }
 
     public async Task<Post?> CreatePostAsync(Post post)
@@ -34,37 +34,23 @@ public class ForumPostRepository : IForumPostRepository
         return (await db.SaveChangesAsync() > 0) ? post : null;
     }
 
-    public async Task<bool?> DeletePostAsync(int threadId, int postId)
+    public async Task DeletePostAsync(Post post)
     {
-        Post? p = await db.Posts.FindAsync(postId);
+        db.Posts.Remove(post);
+        await db.SaveChangesAsync();
 
-        if (p == null || p.ThreadId != threadId)
-        {
-            return null;
-        }
-        
-        db.Posts.Remove(p);
-        return await db.SaveChangesAsync() > 0;
     }
 
-    public async Task<Post?> UpdatePostAsync(int threadId,int id, Post updatedPost)
+    public async Task UpdatePostAsync(Post updatedPost)
     {
-        Post? existingPost = await GetPostByIdAsync(id);
-        if (existingPost == null || existingPost.ThreadId != threadId)
-        {
-            return null;
-        }
-
-        if (existingPost.Content != updatedPost.Content)
-        {
-            existingPost.Content = updatedPost.Content;
-            await db.SaveChangesAsync();
-        }
-        return existingPost;
+        await db.SaveChangesAsync();
     }
 
-    public async Task<Post?> GetPostByIdAsync(int postId)
+    public async Task<Post?> GetPostByIdWithUserAsync(int postId) //eager loading the User
     {
-        return await db.Posts.FindAsync(postId);
+        return await db.Posts
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.PostId == postId);
     }
+    
 }

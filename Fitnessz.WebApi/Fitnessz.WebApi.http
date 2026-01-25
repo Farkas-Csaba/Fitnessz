@@ -14,10 +14,9 @@ Content-Type: application/json
   "Title" : "My second proper fitness thread",
   "Content" : "This is the body of the thread"
 }
+
 ###
-GET {{hostaddress}}/ForumThread/My first proper fitness thread
-###
-GET {{hostaddress}}/ForumThread/xyz
+GET {{hostaddress}}/ForumThread/5
 ###
 POST {{hostaddress}}/ForumThread
 Content-Type: application/json
@@ -26,7 +25,7 @@ Content-Type: application/json
   "Title" : ""
 }
 ###
-GET {{hostaddress}}/ForumPost/1/posts
+GET {{hostaddress}}/ForumPost/5/posts
 Content-Type: application/json
 ###
 POST {{hostaddress}}/ForumPost/1/posts
@@ -43,21 +42,23 @@ Content-Type: application/json
   "Content" : "My reply is now that"
 }
 ###
-POST {{hostaddress}}/ForumPost/1/posts
+POST {{hostaddress}}/ForumPost/5/posts
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "Content" : ""
+  "Content" : "The second reply on thread 5"
 }
 ###
-PUT {{hostaddress}}/ForumPost/1/posts/7
+PUT {{hostaddress}}/ForumPost/5/posts/6
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
   "Content" : "My reply has been updated"
 }
 ###
-GET {{hostaddress}}/ForumPost/1/posts
+GET {{hostaddress}}/ForumPost/posts/7
 ###
 POST {{hostaddress}}/ForumPost/2/posts
 Content-Type: application/json
@@ -73,7 +74,7 @@ Content-Type: application/json
   "Content" : "This will be accepted first and also second time but then with no change"
 }
 ###
-GET {{hostaddress}}/ForumPost/3/posts
+GET {{hostaddress}}/ForumPost/5/posts
 ###
 GET {{hostaddress}}/ForumPost/posts/4
 ###

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class ForumDbContext : DbContext
 {
-   public DbSet<Post>? Posts { get; set; }
+   public DbSet<Post> Posts { get; set; } = null!;
    public DbSet<ForumThread>? ForumThreads { get; set; }
    public DbSet<User>? Users { get; set; }
 
