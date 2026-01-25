@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "Title" : "My first proper fitness thread",
+  "Title" : "A fitness thread",
   "Content" : "This is the body of the thread"
 }
 ###
