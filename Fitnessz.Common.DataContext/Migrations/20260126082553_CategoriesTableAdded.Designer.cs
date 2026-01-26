@@ -3,6 +3,7 @@ using System;
 using Fitnessz.Common.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fitnessz.Common.DataContext.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260126082553_CategoriesTableAdded")]
+    partial class CategoriesTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace Fitnessz.Common.DataContext.Migrations
             modelBuilder.Entity("Fitnessz.Common.EntityModel.ForumThread", b =>
                 {
                     b.HasOne("Fitnessz.Common.EntityModel.Category", "Category")
-                        .WithMany("Threads")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -173,11 +176,6 @@ namespace Fitnessz.Common.DataContext.Migrations
                     b.Navigation("Thread");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Fitnessz.Common.EntityModel.Category", b =>
-                {
-                    b.Navigation("Threads");
                 });
 
             modelBuilder.Entity("Fitnessz.Common.EntityModel.ForumThread", b =>

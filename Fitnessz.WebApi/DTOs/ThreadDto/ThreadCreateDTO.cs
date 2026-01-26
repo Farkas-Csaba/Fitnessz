@@ -11,4 +11,6 @@ public class ThreadCreateDTO
     [Required] //this changed after vadding Content
     [StringLength(2000, MinimumLength = 3, ErrorMessage = "Content must be between 3 and 300 cahracters")]
     public string Content { get; set; } = string.Empty;
+    [Required]
+    public int CategoryId { get; set; }
 }

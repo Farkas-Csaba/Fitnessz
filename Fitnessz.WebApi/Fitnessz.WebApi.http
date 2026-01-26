@@ -12,6 +12,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
+  "CategoryId" : "1",
   "Title" : "My second proper fitness thread",
   "Content" : "This is the body of the thread"
 }
@@ -111,3 +112,11 @@ Authorization: Bearer {{authToken}}
 ###
 DELETE {{hostaddress}}/ForumThread/5
 Authorization: Bearer {{authToken}}
+###
+POST {{hostaddress}}/ForumCategory/2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name" : "Fizikum tippek"
+}

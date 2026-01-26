@@ -50,6 +50,7 @@ public class Program
         builder.Services.AddScoped<IThreadRepository, ForumThreadRepository>();
         builder.Services.AddScoped<IForumPostRepository, ForumPostRepository>();
         builder.Services.AddScoped<IForumUserRepository, ForumUserRepository>();
+        builder.Services.AddScoped<IForumCategory, ForumCategoryRepository>(); //Added after creating the interface and repository
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

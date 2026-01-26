@@ -13,12 +13,14 @@ namespace Fitnessz.WebApi.Controllers;
 public class ForumThreadController : ControllerBase
 {
     private readonly IThreadRepository threadRepo;
+    private readonly IForumCategory categoryRepo;
     private readonly ILogger<ForumThreadController> _logger;
 
-    public ForumThreadController(ILogger<ForumThreadController> logger, IThreadRepository tRepo)
+    public ForumThreadController(ILogger<ForumThreadController> logger, IThreadRepository tRepo, IForumCategory cRepo)
     {
         _logger = logger;
         threadRepo = tRepo;
+        categoryRepo = cRepo;
     }
     
     [HttpGet("{id:int}", Name = nameof(GetThreadById))]
@@ -38,7 +40,9 @@ public class ForumThreadController : ControllerBase
             ThreadId = thread.ThreadId,
             Title = thread.Title,
             Content = thread.Content,
-            AuthorName = thread.User?.UserName ?? "Unknown" //to include this we will need to use Include(t => t.User) in RetrieveAsync
+            AuthorName = thread.User?.UserName ?? "Unknown",
+            CategoryId = thread.CategoryId
+            
         };
         return Ok(response);
     }
@@ -56,11 +60,16 @@ public class ForumThreadController : ControllerBase
             return Unauthorized("Invalid Token");
         }
 
+        if (!await categoryRepo.CategoryExists(dto.CategoryId))
+        {
+            return BadRequest("Category not found");
+        }
         ForumThread thread = new()
         {
             UserId = int.Parse(userIdString), //check this later, is this fine here, what about TryParse()
             Title = dto.Title,
-            Content = dto.Content
+            Content = dto.Content,
+            CategoryId = dto.CategoryId //Added this after adding the Category entity
         };
         
         ForumThread? createdThread = await threadRepo.AddAsync(thread);
@@ -74,7 +83,8 @@ public class ForumThreadController : ControllerBase
             AuthorName = userName,
             Title = createdThread.Title,
             ThreadId = createdThread.ThreadId,
-            Content = createdThread.Content  //this changed after vadding Content
+            Content = createdThread.Content,
+            CategoryId = createdThread.CategoryId
         };
         return CreatedAtAction(
             nameof(GetThreadById),
