@@ -10,6 +10,7 @@ public interface IThreadRepository
     Task<ForumThread?> AddAsync(ForumThread thread);
     Task<bool> ExistsAsync(int threadId);
     Task DeleteAsync(ForumThread thread);
+    Task UpdateThreadAsync(ForumThread thread);
 
 }
 
@@ -24,7 +25,7 @@ public class ForumThreadRepository : IThreadRepository
 
     public async Task<ForumThread?> RetrieveAsync(int id)
     {
-        return await db.ForumThreads.FirstOrDefaultAsync(t => t.ThreadId == id);
+        return await db.ForumThreads.FirstOrDefaultAsync(t => t.ThreadId == id); //null reference exception?
 
     }
 
@@ -56,6 +57,11 @@ public class ForumThreadRepository : IThreadRepository
     public async Task DeleteAsync(ForumThread thread)
     {
         db.Remove(thread);
+        await db.SaveChangesAsync();
+    }
+
+    public async Task UpdateThreadAsync(ForumThread thread)
+    {
         await db.SaveChangesAsync();
     }
 }

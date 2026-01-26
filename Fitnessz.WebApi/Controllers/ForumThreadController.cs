@@ -125,4 +125,39 @@ public class ForumThreadController : ControllerBase
 
         return NoContent();
     }
+    [Authorize]
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateThread(int id, [FromBody] ThreadUpdateDTO dto)
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int useriD)) //?ask about this structure
+        {
+            return Unauthorized();
+        }
+
+        ForumThread? existingThread = await threadRepo.RetrieveAsync(id);
+        if (existingThread == null)
+        {
+            return NotFound();
+        }
+
+        bool isOwner = existingThread.UserId == useriD;
+        bool isAdmin = User.IsInRole("Admin");
+
+        if (!isOwner && !isAdmin)
+        {
+            return Forbid();
+        }
+
+        existingThread.Title = dto.Title;
+        existingThread.Content = dto.Content;
+
+        await threadRepo.UpdateThreadAsync(existingThread);
+        
+        return NoContent();
+
+    }
 }
