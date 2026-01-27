@@ -35,6 +35,7 @@ public class ForumUserController : ControllerBase
         var user = new User();
         user.Email = dto.Email;
         user.UserName = dto.UserName;
+        user.Role = "User";
 
         User? result = await userRepo.RegisterUserAsync(user, dto.Password);
         if (result == null)
@@ -68,18 +69,19 @@ public class ForumUserController : ControllerBase
 
     public string CreateToken(User user, RsaSecurityKey privateKey)
     {
-        List<Claim> claims = new List<Claim> // here can we not use the "iss" "subject" claims?
+        List<Claim> claims = new List<Claim> 
         {
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role, "Member") //Adding a role is essential for a forum
+            new Claim(ClaimTypes.Role, user.Role) 
+            
         };
         var creds = new SigningCredentials(privateKey, SecurityAlgorithms.RsaSha256);
 
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddHours(2), //Questionable token should ezpire sonner !
+            Expires = DateTime.UtcNow.AddHours(1), //Questionable token should ezpire sonner !
             SigningCredentials = creds,
             Issuer = "Fitnessz.WebApi",
             Audience = "Fitnessz.Clients"

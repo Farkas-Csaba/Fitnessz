@@ -8,7 +8,7 @@ using Fitnessz.WebApi.DTOs.PostDto;
 
 namespace Fitnessz.WebApi.Controllers;
 [ApiController]
-[Route("{controller}")]
+[Route("[controller]")]
 
 public class ForumPostController : ControllerBase
 {
@@ -34,7 +34,7 @@ public class ForumPostController : ControllerBase
 
         return Ok(new PostResponseDto()
         {
-            AuthorName = p.User.UserName, //this should never be null why is it like this
+            AuthorName = p.User?.UserName ?? "Deleted User", //this should never be null why is it like this
             Content = p.Content, //same here
             PostId = p.PostId,
             CreatedAt = p.CreatedAt
@@ -62,7 +62,7 @@ public class ForumPostController : ControllerBase
         });
         return Ok(response);
     }
-    [Authorize]
+    [Authorize(Roles = "User,Moderator,Admin")]
     [HttpPost("{threadId}/posts")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -106,7 +106,7 @@ public class ForumPostController : ControllerBase
             new { id = response.PostId },
             response);
     }
-    [Authorize]
+    [Authorize(Roles = "User,Moderator,Admin")]
     [HttpPut("{threadId}/posts/{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -131,8 +131,9 @@ public class ForumPostController : ControllerBase
         }
 
         bool isOwner = existingPost.UserId == currentUserId;
-        bool isAdmin = User.IsInRole("admin");
-        if (!isOwner && !isAdmin) //Roles, get back to this later 
+        bool isModerator = User.IsInRole("Moderator");
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isOwner && !isAdmin && !isModerator)
         {
             return Forbid();
         }
@@ -142,7 +143,7 @@ public class ForumPostController : ControllerBase
 
         return NoContent();
     }
-    [Authorize]
+    [Authorize(Roles = "User,Admin,Moderator")]
     [HttpDelete("{threadId}/posts/{postId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -165,8 +166,9 @@ public class ForumPostController : ControllerBase
         }
         
         bool isOwner = existingPost.UserId == currentUserId;
-        bool isAdmin = User.IsInRole("admin");
-        if (!isOwner && !isAdmin) //Roles, get back to this later 
+        bool isModerator = User.IsInRole("Moderator");
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isOwner && !isAdmin && !isModerator) 
         {
             return Forbid();
         }

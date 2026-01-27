@@ -46,7 +46,7 @@ public class ForumThreadController : ControllerBase
         };
         return Ok(response);
     }
-    [Authorize]
+    [Authorize(Roles = "User,Moderator,Admin")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -92,7 +92,7 @@ public class ForumThreadController : ControllerBase
             response);
     }
 
-    [Authorize]
+    [Authorize(Roles = "User,Moderator,Admin")]
     [HttpDelete("{threadId:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -115,8 +115,8 @@ public class ForumThreadController : ControllerBase
         }
         bool isAdmin = User.IsInRole("Admin");
         bool isOwner = existingThread.UserId == userId;
-
-        if (!isOwner && !isAdmin)
+        bool isModerator = User.IsInRole("Moderator");
+        if (!isOwner && !isAdmin && !isModerator)
         {
             return Forbid();
         }
@@ -125,7 +125,7 @@ public class ForumThreadController : ControllerBase
 
         return NoContent();
     }
-    [Authorize]
+    [Authorize(Roles = "User,Moderator,Admin")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -146,8 +146,8 @@ public class ForumThreadController : ControllerBase
 
         bool isOwner = existingThread.UserId == useriD;
         bool isAdmin = User.IsInRole("Admin");
-
-        if (!isOwner && !isAdmin)
+        bool isModerator = User.IsInRole("Moderator");
+        if (!isOwner && !isAdmin && !isModerator)
         {
             return Forbid();
         }
