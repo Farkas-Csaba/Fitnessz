@@ -1,0 +1,6 @@
+<h1>How to learn angular in 2026?</h1>
+
+@for (c of comments(); track c.id)
+{
+  <app-comment [data]="c" (addupvoteEvent) = UpdateDb($event) />
+}

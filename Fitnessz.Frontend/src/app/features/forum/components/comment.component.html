@@ -1,0 +1,21 @@
+<div class="comment.box">
+
+    @defer (on viewport) {
+      <div class="metadata">
+      <strong>{{data().author}}</strong> ~ <strong>{{data().timeStamp}}</strong>
+        </div>
+      <p>{{data().content}}</p>
+      <div class="actions">
+        <span><button (click) = AddUpVote()>{{data().upvotes}}</button></span> | <span>Reply</span>
+      </div>
+    }
+    @placeholder
+    {
+      <p>Scroll to load comments</p>
+    }
+    @loading (minimum 2s)
+    {
+      <p>Loading comments... </p>
+    }
+
+</div>
