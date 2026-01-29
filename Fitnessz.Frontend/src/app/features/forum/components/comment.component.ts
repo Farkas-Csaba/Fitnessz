@@ -3,8 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { ForumComment } from '@shared/interfaces/ForumComment.model';
 @Component({
   selector: 'app-comment',
-  templateUrl: 'comment.html',
-  styleUrl: "comment.css"
+  templateUrl: 'comment.component.html',
+  styleUrl: "comment.component.css"
 
 })
 export class Comment {
