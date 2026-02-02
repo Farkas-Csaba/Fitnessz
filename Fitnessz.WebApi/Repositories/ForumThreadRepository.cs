@@ -11,6 +11,7 @@ public interface IThreadRepository
     Task<bool> ExistsAsync(int threadId);
     Task DeleteAsync(ForumThread thread);
     Task UpdateThreadAsync(ForumThread thread);
+    Task<IEnumerable<ForumThread>> ListAllAsync(); //What can be null here
 
 }
 
@@ -63,5 +64,14 @@ public class ForumThreadRepository : IThreadRepository
     public async Task UpdateThreadAsync(ForumThread thread)
     {
         await db.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<ForumThread>> ListAllAsync()
+    {
+        return await db.ForumThreads
+            .Include(t => t.User)
+            .Include(t => t.Category)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
     }
 }

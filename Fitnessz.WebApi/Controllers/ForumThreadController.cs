@@ -160,4 +160,22 @@ public class ForumThreadController : ControllerBase
         return NoContent();
 
     }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllThreads()
+    {
+         var threads = await threadRepo.ListAllAsync();
+
+         var response = threads.Select(t => new ThreadExploreDto()
+         {
+             AuthorName = t.User?.UserName ?? "Anonymus",
+             CategoryName = t.Category.Name,
+             CreatedAt = t.CreatedAt,
+             ThreadId = t.ThreadId,
+             Title = t.Title,
+             ContentPreview = t.Content.Length > 100 ? t.Content.Substring(0, 100) + "..." : t.Content
+         });
+         return Ok(response);
+    }
 }
