@@ -44,6 +44,15 @@ public class Program
         // 2. Give it to the Dependency Injection container 
         // so the Login Controller can "ask" for it.
         builder.Services.AddSingleton(rsaKey);
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAngular", policy =>
+            {
+                policy.WithOrigins("https;//localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -61,7 +70,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        
+        app.UseCors("AllowAngular"); //Is this the right place?
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
