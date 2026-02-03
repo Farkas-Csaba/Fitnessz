@@ -8,8 +8,8 @@ public class ThreadCreateDTO
     [StringLength(100, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 100 characters")]
     public string Title { get; set; } = string.Empty;
 
-    [Required] //this changed after vadding Content
-    [StringLength(2000, MinimumLength = 3, ErrorMessage = "Content must be between 3 and 2000 cahracters")]
+   
+    [StringLength(2000, MinimumLength = 0, ErrorMessage = "Content must be between 0 and 2000 cahracters")]
     public string Content { get; set; } = string.Empty;
     [Required]
     public int CategoryId { get; set; }

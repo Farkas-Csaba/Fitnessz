@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-export interface ThreadExplore {
+export interface Thread{
   threadId : number,
   title : string,
   authorName: string,
@@ -17,7 +17,11 @@ export class FelfedezesService {
   private apiUrl = "https://localhost:5001/ForumThread"
 
   GetExplorePageThreads (){
-    return this.http.get<ThreadExplore[]>(this.apiUrl);
+    return this.http.get<Thread[]>(this.apiUrl);
+  }
+
+  GetThreadsByCategory(categoryId : number) {
+    return this.http.get<Thread[]>(this.apiUrl + "/category/" + categoryId);
   }
 
 }

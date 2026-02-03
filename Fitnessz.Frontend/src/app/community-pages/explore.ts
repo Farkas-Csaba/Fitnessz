@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {FelfedezesService, ThreadExplore} from '../community-pages-service/felfedezes-service';
+import {FelfedezesService, Thread} from '../community-pages-service/felfedezes-service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
 
@@ -10,10 +10,10 @@ import {DatePipe} from '@angular/common';
   styleUrl: './felfedezes.css',
 })
 export class Felfedezes {
-  ThreadService = inject(FelfedezesService);
+  ThreadService = inject(FelfedezesService); //read docs on whether this should be private
   threads = toSignal(this.ThreadService.GetExplorePageThreads(), {initialValue: []})
 
-  onThreadClick(thread : ThreadExplore)
+  openThread(thread : Thread)
   {
     //load the full content of thread
   }
