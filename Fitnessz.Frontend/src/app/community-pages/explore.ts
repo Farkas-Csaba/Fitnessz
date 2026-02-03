@@ -1,16 +1,16 @@
 import {Component, inject} from '@angular/core';
-import {FelfedezesService, Thread} from '../community-pages-service/felfedezes-service';
+import {ExploreService, Thread} from '../community-pages-service/explore-service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
 
 @Component({
-  selector: 'app-felfedezes',
+  selector: 'app-explore',
   imports: [DatePipe],
-  templateUrl: './felfedezes.html',
-  styleUrl: './felfedezes.css',
+  templateUrl: './explore.html',
+  styleUrl: './explore.css',
 })
-export class Felfedezes {
-  ThreadService = inject(FelfedezesService); //read docs on whether this should be private
+export class Explore {
+  ThreadService = inject(ExploreService); //read docs on whether this should be private
   threads = toSignal(this.ThreadService.GetExplorePageThreads(), {initialValue: []})
 
   openThread(thread : Thread)

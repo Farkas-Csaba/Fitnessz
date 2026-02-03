@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FelfedezesService } from './felfedezes-service';
+import { ExploreService } from './explore-service';
 
-describe('FelfedezesService', () => {
-  let service: FelfedezesService;
+describe('ExploreService', () => {
+  let service: ExploreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FelfedezesService);
+    service = TestBed.inject(ExploreService);
   });
 
   it('should be created', () => {

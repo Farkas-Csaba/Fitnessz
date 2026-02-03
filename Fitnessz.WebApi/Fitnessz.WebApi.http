@@ -12,9 +12,9 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "CategoryId" : "1",
-  "Title" : "Mit gondoltok a splitemrol?",
-  "Content" : "Hetfon: lab Kedden: hat mell Szerdan: kar Csutortok: pihenes Pentek: hat mell Szombat: lab Vasarnap pihenes"
+  "CategoryId" : "2",
+  "Title" : "Szerintetek mennyi gramm protein a megfelelő?",
+  "Content" : ""
 }
 
 ###
@@ -112,14 +112,6 @@ Authorization: Bearer {{authToken}}
 ###
 DELETE {{hostaddress}}/ForumThread/5
 Authorization: Bearer {{authToken}}
-###
-POST {{hostaddress}}/ForumCategory/2
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-{
-  "name" : "Fizikum tippek"
-}
 ###
 GET {{hostaddress}}/ForumThread
 ###

@@ -12,7 +12,7 @@ export interface Thread{
 @Injectable({
   providedIn: 'root',
 })
-export class FelfedezesService {
+export class ExploreService {
   private http = inject(HttpClient);
   private apiUrl = "https://localhost:5001/ForumThread"
 
