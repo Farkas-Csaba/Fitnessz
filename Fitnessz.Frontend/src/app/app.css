@@ -1,53 +1,168 @@
-.app-shell {
-  display: flex; /* This puts sidebar and content side-by-side */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  background-color: var(--dark-bg);
+  color: #e0e0e0;
   height: 100vh;
-  width: 100vw;
   overflow: hidden;
-
 }
 
-.sidebar {
-  width: 280px;
-  background-color: var(--dark-bg);
-  border-right: 1px solid #333;
+/* Top Bar */
+.top-bar {
+  background-color: var(--lightdark-bg);
+  border-bottom: 1px solid #2a2a2a;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 56px;
+}
+
+.top-bar-content {
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2D5593;
+  cursor: pointer;
+}
+
+.login-btn {
+  background-color: #2D5593;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #1557ff;
+}
+
+.main-layout {
+  display: flex;
+  height: 100vh;
+  padding-top: 56px;
+}
+
+
+.left-sidebar {
+  width: 240px;
+  background-color: var(--lightdark-bg);
+  border-right: 1px solid #2a2a2a;
+  overflow-y: auto;
+  position: fixed;
+  left: 0;
+  top: 56px;
+  bottom: 0;
+}
+
+.sidebar-section {
+  padding: 16px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.sidebar-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  letter-spacing: 0.5px;
+}
+
+.topic-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.topic-item:hover {
+  background-color: #2a2a2a;
+}
+
+.topic-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topic-name {
+  flex: 1;
 }
 
 
 .main-content {
   flex: 1;
-  background-color: var(--dark-bg);
+  margin-left: 240px;
   overflow-y: auto;
-  padding: 2rem;
+  padding: 24px;
+  background-color: var(--dark-bg);
 }
 
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 2rem;
-
+.content-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.nav-links a {
-  font-size: 0.85rem;
-  text-decoration: none;
-  color: #FFFFFFFF;
-  padding: 10px;
-  border-radius: 4px;
 
+
+/* Mobile */
+@media (max-width: 768px) {
+  .left-sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
 }
 
-.nav-links a:hover {
-  background-color: rgba(255,255,255,0.05);
+@media (max-width: 640px) {
+  .left-sidebar {
+    position: fixed;
+    left: -240px;
+    transition: left 0.3s;
+  }
+
+  .left-sidebar.mobile-open {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
 }
 
-.logo {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin: 20px 0 10px 10px;
-  letter-spacing: 1px;
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  color: #e0e0e0;
 }
