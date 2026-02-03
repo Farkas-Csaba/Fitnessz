@@ -12,6 +12,7 @@ public interface IThreadRepository
     Task DeleteAsync(ForumThread thread);
     Task UpdateThreadAsync(ForumThread thread);
     Task<IEnumerable<ForumThread>> ListAllAsync(); //What can be null here
+    Task<IEnumerable<ForumThread>> ListAllByCategoryAsync(int categoryId);
 
 }
 
@@ -73,5 +74,13 @@ public class ForumThreadRepository : IThreadRepository
             .Include(t => t.Category)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ForumThread>> ListAllByCategoryAsync(int categoryId)
+    {
+        return await db.ForumThreads
+            .Include(t => t.User)
+            .Include(t => t.Category)
+            .Where(t => t.CategoryId == categoryId).ToListAsync();
     }
 }

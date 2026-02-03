@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {FelfedezesService, ThreadExplore} from '../felfedezes-service';
+import {FelfedezesService, ThreadExplore} from '../community-pages-service/felfedezes-service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
 

@@ -178,4 +178,29 @@ public class ForumThreadController : ControllerBase
          });
          return Ok(response);
     }
+
+    [HttpGet("category/{categoryId:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllThreadsByCategory(int categoryId)
+    {
+        if (!await categoryRepo.CategoryExists(categoryId))
+        {
+            return BadRequest("Category does not exist");
+        }
+
+        var threads = await threadRepo.ListAllByCategoryAsync(categoryId);
+
+        var response = threads.Select(t => new ThreadCategoryDTO()
+        {
+            AuthorName = t.User?.UserName ?? "Anonyumus",
+            CategoryName = t.Category.Name,
+            CreatedAt = t.CreatedAt,
+            ThreadId = t.ThreadId,
+            Title = t.Title,
+            ContentPreview = t.Content.Length > 100 ? t.Content.Substring(0,100) + "..." : t.Content 
+        });
+
+        return Ok(response);
+    }
 }

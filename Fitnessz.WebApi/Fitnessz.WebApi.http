@@ -122,3 +122,5 @@ Authorization: Bearer {{authToken}}
 }
 ###
 GET {{hostaddress}}/ForumThread
+###
+GET {{hostaddress}}/ForumThread/category/1

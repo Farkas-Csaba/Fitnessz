@@ -1,13 +1,13 @@
 <div class="explore-container">
   <div class="thread-list">
-    <!-- Loading State -->
+
     @if (threads().length === 0) {
       <div class="loading-text">
         <p>Posztok betöltése...</p>
       </div>
     }
 
-    <!-- Thread Cards -->
+
     @for (thread of threads(); track thread.threadId) {
       <div class="thread-card" (click)="onThreadClick(thread)">
         <div class="card-header">
