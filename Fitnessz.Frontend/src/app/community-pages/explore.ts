@@ -1,7 +1,8 @@
 import {Component, inject} from '@angular/core';
-import {ExploreService, Thread} from '../community-pages-service/explore-service';
+import {ExploreService, ThreadPreview} from '../community-pages-service/explore-service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-explore',
@@ -10,11 +11,12 @@ import {DatePipe} from '@angular/common';
   styleUrl: './explore.css',
 })
 export class Explore {
-  ThreadService = inject(ExploreService); //read docs on whether this should be private
+  private router = inject(Router);
+  private ThreadService = inject(ExploreService); //read docs on whether this should be private
   threads = toSignal(this.ThreadService.GetExplorePageThreads(), {initialValue: []})
 
-  openThread(thread : Thread)
+  navigateToThread(thread : ThreadPreview)
   {
-    //load the full content of thread
+      this.router.navigate(['egeszthread', thread.threadId])
   }
 }

@@ -1,5 +1,5 @@
 import {Component, inject, input} from '@angular/core';
-import {ExploreService, Thread} from '../community-pages-service/explore-service';
+import {ExploreService, ThreadPreview} from '../community-pages-service/explore-service';
 import {toSignal, toObservable} from '@angular/core/rxjs-interop';
 import {switchMap} from 'rxjs';
 import {DatePipe} from '@angular/common';
@@ -13,10 +13,10 @@ import {DatePipe} from '@angular/common';
   styleUrl: './categories.css',
 })
 export class Categories {
-  ThreadService = inject(ExploreService);
+   private ThreadService = inject(ExploreService);
 
+  //Something is not right with this in development because of SSR lets keep an eye on it as we move to production
   id = input.required<string>();
-
   threads = toSignal(
     toObservable(this.id).pipe(
       switchMap(categoryId => this.ThreadService.GetThreadsByCategory(+categoryId))
@@ -24,7 +24,7 @@ export class Categories {
     { initialValue: [] }
   );
 
-  openThread(thread: Thread)
+  openThread(thread: ThreadPreview)
   {
     //implement this later, load the thread and comments
   }

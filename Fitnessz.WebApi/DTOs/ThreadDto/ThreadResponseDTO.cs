@@ -8,7 +8,9 @@ public class ThreadResponseDTO
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;  
     public string AuthorName { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
     public int CategoryId { get; set; }
+    public DateTime CreatedAt { get; set; }
     
     
 }

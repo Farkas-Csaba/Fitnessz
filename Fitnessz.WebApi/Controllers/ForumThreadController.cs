@@ -41,7 +41,8 @@ public class ForumThreadController : ControllerBase
             Title = thread.Title,
             Content = thread.Content,
             AuthorName = thread.User?.UserName ?? "Unknown",
-            CategoryId = thread.CategoryId
+            CategoryName = thread.Category.Name,
+            CreatedAt = thread.CreatedAt
             
         };
         return Ok(response);

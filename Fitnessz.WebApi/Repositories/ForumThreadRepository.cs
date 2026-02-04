@@ -27,7 +27,7 @@ public class ForumThreadRepository : IThreadRepository
 
     public async Task<ForumThread?> RetrieveAsync(int id)
     {
-        return await db.ForumThreads.FirstOrDefaultAsync(t => t.ThreadId == id); //null reference exception?
+        return await db.ForumThreads.Include(t =>t.User).Include(t => t.Category).FirstOrDefaultAsync(t => t.ThreadId == id); //null reference exception?
 
     }
 
