@@ -24,8 +24,8 @@ export class Categories {
     { initialValue: [] }
   );
 
-  openThread(thread: ThreadPreview)
+  goToThread(thread: ThreadPreview)
   {
-    //implement this later, load the thread and comments
+    this.ThreadService.navigateToThread(thread);
   }
 }

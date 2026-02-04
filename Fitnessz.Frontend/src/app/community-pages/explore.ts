@@ -15,8 +15,8 @@ export class Explore {
   private ThreadService = inject(ExploreService); //read docs on whether this should be private
   threads = toSignal(this.ThreadService.GetExplorePageThreads(), {initialValue: []})
 
-  navigateToThread(thread : ThreadPreview)
+  goToThread(thread : ThreadPreview)
   {
-      this.router.navigate(['egeszthread', thread.threadId])
+    this.ThreadService.navigateToThread(thread);
   }
 }

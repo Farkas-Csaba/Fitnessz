@@ -9,7 +9,7 @@
 
 
     @for (thread of threads(); track thread.threadId) {
-      <div class="thread-card" (click)="openThread(thread)">
+      <div class="thread-card" (click)="goToThread(thread)">
         <div class="card-header">
           <span class="category-badge">{{ thread.categoryName }}</span>
           <span class="author">{{ thread.authorName }}</span>

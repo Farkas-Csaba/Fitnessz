@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 export interface ThreadPreview{
   threadId : number,
@@ -22,7 +23,13 @@ export interface Thread{
 })
 export class ExploreService {
   private http = inject(HttpClient);
-  private apiUrl = "https://localhost:5001/ForumThread"
+  private apiUrl = "https://localhost:5001/ForumThread";
+  private router = inject(Router);
+
+  navigateToThread(thread : ThreadPreview)
+  {
+    this.router.navigate(['egeszthread', thread.threadId])
+  }
 
   GetExplorePageThreads (){
     return this.http.get<ThreadPreview[]>(this.apiUrl);
