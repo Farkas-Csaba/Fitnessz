@@ -12,11 +12,11 @@ import {Router} from '@angular/router';
 })
 export class Explore {
   private router = inject(Router);
-  private ThreadService = inject(ExploreService); //read docs on whether this should be private
-  threads = toSignal(this.ThreadService.GetExplorePageThreads(), {initialValue: []})
+  private service = inject(ExploreService); //read docs on whether this should be private
+  threads = toSignal(this.service.GetExplorePageThreads(), {initialValue: []})
 
   goToThread(thread : ThreadPreview)
   {
-    this.ThreadService.navigateToThread(thread);
+    this.service.NavigateToThread(thread);
   }
 }

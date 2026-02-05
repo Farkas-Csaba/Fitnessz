@@ -13,19 +13,19 @@ import {DatePipe} from '@angular/common';
   styleUrl: './categories.css',
 })
 export class Categories {
-   private ThreadService = inject(ExploreService);
+   private service = inject(ExploreService);
 
   //Something is not right with this in development because of SSR lets keep an eye on it as we move to production
   id = input.required<string>();
   threads = toSignal(
     toObservable(this.id).pipe(
-      switchMap(categoryId => this.ThreadService.GetThreadsByCategory(+categoryId))
+      switchMap(categoryId => this.service.GetThreadsByCategory(+categoryId))
     ),
     { initialValue: [] }
   );
 
   goToThread(thread: ThreadPreview)
   {
-    this.ThreadService.navigateToThread(thread);
+    this.service.NavigateToThread(thread);
   }
 }

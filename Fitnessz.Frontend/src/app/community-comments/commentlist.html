@@ -1,0 +1,46 @@
+<div class="comments-container">
+  <div class="comments-wrapper">
+
+    <!-- Comments Header -->
+    <div class="comments-header">
+      <h3 class="comments-title">Válaszok ({{ comments().length }})</h3>
+    </div>
+
+    <!-- No Comments State -->
+    @if (comments().length === 0) {
+      <div class="no-comments">
+        <p>Még nincsenek válaszok erre a posztra.</p>
+        <p class="subtext">Légy te az első, aki válaszol!</p>
+      </div>
+    }
+
+    <!-- Comment List -->
+    @for (comment of comments(); track comment.postId) {
+      <div class="comment-card">
+        <div class="comment-header">
+          <div class="avatar">{{ comment.authorName.charAt(0).toUpperCase() }}</div>
+          <div class="comment-author-info">
+            <span class="comment-author-name">{{ comment.authorName }}</span>
+            <span class="comment-date">{{ comment.createdAt | date:'yyyy. MMM dd. HH:mm' }}</span>
+          </div>
+        </div>
+
+        <div class="comment-content">
+          <p>{{ comment.content }}</p>
+        </div>
+
+        <div class="comment-actions">
+          <button class="comment-action-btn">
+            <span class="action-icon">👍</span>
+            <span>{{ 0 }}</span>
+          </button>
+          <button class="comment-action-btn">
+            <span class="action-icon">💬</span>
+            <span>Válasz</span>
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>
