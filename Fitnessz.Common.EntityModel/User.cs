@@ -1,15 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-
+using Microsoft.AspNetCore.Identity;
 namespace Fitnessz.Common.EntityModel;
 
-public class User
+
+public class User : IdentityUser<int>
 {
-    public int UserId { get; set; }
-    public string UserName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string PasswordHash { get; set; } = null!;
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    [Required] public string Role { get; set; } = "User";
+  
     
     //navigation properties
     public ICollection<ForumThread> Threads { get; set; } = new List<ForumThread>();

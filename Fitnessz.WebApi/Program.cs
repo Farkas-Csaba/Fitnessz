@@ -1,8 +1,9 @@
 using System.Text;
 using Fitnessz.Common.DataContext;
+using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.Repositories;
-using Fitnessz.WebApi.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fitnessz.WebApi;
@@ -16,34 +17,29 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString postgresConnection not found");
         builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
 
-        var rsaKey = Keyhelper.GetPrivateKey(); // 1. Get the Key (In production, this would be the Public Key)
+        builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+            })
+            .AddEntityFrameworkStores<ForumDbContext>();
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        Console.WriteLine("Auth failed: " + context.Exception.Message);
-                        return Task.CompletedTask;
-                    }
-                };
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
+
+        builder.Services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidateIssuerSigningKey = true,
-                    //switched from symmetric to rsa key
-                    IssuerSigningKey = rsaKey,
-                    ValidateIssuer = false, //true in production!
-                    ValidateAudience = false, //true in production
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             });
-        // 2. Give it to the Dependency Injection container 
-        // so the Login Controller can "ask" for it.
-        builder.Services.AddSingleton(rsaKey);
+    
+       
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAngular", policy =>
@@ -70,7 +66,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseCors("AllowAngular"); //Is this the right place?
+        app.UseCors("AllowAngular"); 
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();

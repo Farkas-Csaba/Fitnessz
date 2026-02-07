@@ -1,9 +1,12 @@
 ﻿using Fitnessz.Common.EntityModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace Fitnessz.Common.DataContext;
 using Microsoft.EntityFrameworkCore;
 
 
-public class ForumDbContext : DbContext
+public class ForumDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
    public DbSet<Post> Posts { get; set; } = null!;
    public DbSet<ForumThread>? ForumThreads { get; set; }
@@ -19,9 +22,13 @@ public class ForumDbContext : DbContext
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)
    {
+      base.OnModelCreating(modelBuilder); 
+
+      // 2. Your custom index logic below:
       modelBuilder.Entity<User>()
-         .HasIndex(u => u.UserName) //why HasIndex I understand the IsUnique
+         .HasIndex(u => u.UserName)
          .IsUnique();
+
       modelBuilder.Entity<User>()
          .HasIndex(u => u.Email)
          .IsUnique();

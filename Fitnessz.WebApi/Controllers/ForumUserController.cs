@@ -11,6 +11,7 @@ namespace Fitnessz.WebApi.Controllers;
 [Route("[controller]")]
 public class ForumUserController : ControllerBase
 {
+    /*
     private readonly IForumUserRepository userRepo;
     private readonly RsaSecurityKey _signingKey;
 
@@ -96,5 +97,5 @@ public class ForumUserController : ControllerBase
     public record RegisterDto(string UserName, string Email, string Password);
     //Dto for registering the user the Db contains PasswordHash not Password 
     public record LoginDto(string UserName, string Password);
-
+    */
 }
