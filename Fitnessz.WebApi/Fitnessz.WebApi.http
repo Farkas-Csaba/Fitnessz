@@ -84,12 +84,12 @@ Content-Type: application/json
   "password" : "randomPa$$"
 }
 ###
-POST {{hostaddress}}/ForumUser/login
+POST {{hostaddress}}/ForumAuth/login
 Content-Type: application/json
 
 {
-  "UserName" : "Farkas Csaba",
-  "Password" : "randomPa$$"
+  "Email" : "randomemail@gmail.com",
+  "Password" : "RandomPass123"
 }
 
 ###
