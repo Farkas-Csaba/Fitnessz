@@ -34,8 +34,8 @@ public class ForumPostController : ControllerBase
 
         return Ok(new PostResponseDto()
         {
-            AuthorName = p.User?.UserName ?? "Deleted User", //this should never be null why is it like this
-            Content = p.Content, //same here
+            AuthorName = p.User?.UserName ?? "Deleted User", 
+            Content = p.Content,
             PostId = p.PostId,
             CreatedAt = p.CreatedAt
         });
@@ -106,7 +106,7 @@ public class ForumPostController : ControllerBase
             new { id = response.PostId },
             response);
     }
-    [Authorize(Roles = "User,Moderator,Admin")]
+    [Authorize(Roles = "User")]
     [HttpPut("{threadId}/posts/{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -131,9 +131,8 @@ public class ForumPostController : ControllerBase
         }
 
         bool isOwner = existingPost.UserId == currentUserId;
-        bool isModerator = User.IsInRole("Moderator");
-        bool isAdmin = User.IsInRole("Admin");
-        if (!isOwner && !isAdmin && !isModerator)
+       
+        if (!isOwner)
         {
             return Forbid();
         }

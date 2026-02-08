@@ -39,7 +39,7 @@ public class ForumThreadController : ControllerBase
         {
             ThreadId = thread.ThreadId,
             Title = thread.Title,
-            Content = thread.Content,
+            Content = thread.Content ?? "",
             AuthorName = thread.User?.UserName ?? "Unknown",
             CategoryName = thread.Category.Name,
             CreatedAt = thread.CreatedAt
@@ -70,7 +70,7 @@ public class ForumThreadController : ControllerBase
             UserId = int.Parse(userIdString), //check this later, is this fine here, what about TryParse()
             Title = dto.Title,
             Content = dto.Content,
-            CategoryId = dto.CategoryId //Added this after adding the Category entity
+            CategoryId = dto.CategoryId 
         };
         
         ForumThread? createdThread = await threadRepo.AddAsync(thread);
@@ -84,7 +84,7 @@ public class ForumThreadController : ControllerBase
             AuthorName = userName,
             Title = createdThread.Title,
             ThreadId = createdThread.ThreadId,
-            Content = createdThread.Content,
+            Content = createdThread.Content ?? "",
             CategoryId = createdThread.CategoryId
         };
         return CreatedAtAction(
@@ -175,7 +175,7 @@ public class ForumThreadController : ControllerBase
              CreatedAt = t.CreatedAt,
              ThreadId = t.ThreadId,
              Title = t.Title,
-             ContentPreview = t.Content.Length > 100 ? t.Content.Substring(0, 100) + "..." : t.Content
+             ContentPreview = t.Content?.Length > 100 ? t.Content.Substring(0, 100) + "..." : t.Content ?? ""
          });
          return Ok(response);
     }
@@ -199,7 +199,7 @@ public class ForumThreadController : ControllerBase
             CreatedAt = t.CreatedAt,
             ThreadId = t.ThreadId,
             Title = t.Title,
-            ContentPreview = t.Content.Length > 100 ? t.Content.Substring(0,100) + "..." : t.Content 
+            ContentPreview = t.Content?.Length > 100 ? t.Content.Substring(0,100) + "..." : t.Content ?? ""
         });
 
         return Ok(response);
