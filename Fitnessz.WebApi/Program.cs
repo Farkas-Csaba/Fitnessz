@@ -20,10 +20,11 @@ public class Program
         builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
             })
             .AddEntityFrameworkStores<ForumDbContext>();
 
-
+        
         builder.Services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,6 +39,7 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             });
+        
     
        
         builder.Services.AddCors(options =>

@@ -93,13 +93,13 @@ Content-Type: application/json
 }
 
 ###
-POST {{hostaddress}}/ForumUser/register
+POST {{hostaddress}}/ForumAuth/register
 Content-Type: application/json
 
 {
-  "UserName" : "Not Farkas Csaba",
-  "Email" : "farkascsabi123@gmail.com",
-  "Password" : "RandomPass"
+  "UserName" : "FarkasCsaba",
+  "Email" : "randomemail@gmail.com",
+  "Password" : "RandomPass123"
 }
 ###
 POST {{hostaddress}}/ForumPost/5/posts
