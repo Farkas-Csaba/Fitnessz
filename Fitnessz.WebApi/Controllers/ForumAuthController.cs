@@ -46,8 +46,10 @@ public class ForumAuthController : ControllerBase
             {
                 return BadRequest("Registration failed");
             }
+            //nem implementation instead of returning success message i return the new token and the userName
+            var token = GenerateJwtToken(user);
 
-            return Ok("Registration successful");
+            return Ok(new {token = token, username = user.UserName });
         }
         catch (Exception ex)
         {

@@ -19,9 +19,7 @@ export class AuthService {
       }
     }
   }
-
-
-  login (credentials: any )
+  Login (credentials: any )
   {
     return this.http.post<any>(`${this.apiRoute}/login`, credentials).pipe(
       tap(res => {
@@ -30,7 +28,17 @@ export class AuthService {
       } )
     );
   }
-  logout(){
+  //new implementation register
+  Register(credentials : any)
+  {
+    return this.http.post<any>(`${this.apiRoute}/register`, credentials).pipe(
+      tap(res=>{
+        this.currentUser.set(res);
+        localStorage.setItem("fitness_user", JSON.stringify(res));
+      })
+    );
+  }
+  Logout(){
     this.currentUser.set(null);
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem("fitness_user");

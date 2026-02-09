@@ -4,33 +4,39 @@ import {AuthService} from '../login-pages-service/auth-service';
 import {Router, RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './register.html',
+  styleUrl: './register.css',
 })
-export class Login {
+export class Register {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  loginForm = this.fb.group(
+  registerform = this.fb.group(
     {
+      UserName: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
-      Password: ['', [Validators.required]]
+      Password: ['', [Validators.required, Validators.minLength(8)]]
     });
-  SubmitLogin() {
-    if (this.loginForm.valid) {
 
-      this.authService.Login(this.loginForm.value).subscribe({
+  SubmitRegistration()
+  {
+    if (this.registerform.valid)
+    {
+      this.authService.Register(this.registerform.value).subscribe({
         next: () => {
           this.router.navigate(['']);
         },
         error: (err: any) => {
-          console.error('Login failed', err);
-          alert('Bejelentkezés sikertelen. Kérlek próbáld újra.');
+          console.error('Registration failed', err);
+          alert('Regisztráció sikertelen. Kérlek próbáld újra.');
         }
       });
+    }
+    else {
+      this.registerform.markAllAsTouched();
     }
   }
 }

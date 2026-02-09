@@ -1,0 +1,110 @@
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <!-- Register Card -->
+    <div class="register-card">
+
+      <!-- Header -->
+      <div class="register-header">
+        <h1 class="register-title">Regisztráció</h1>
+        <p class="register-subtitle">Hozz létre egy új fiókot és csatlakozz a közösséghez!</p>
+      </div>
+
+      <!-- Register Form -->
+      <form [formGroup]="registerform" (ngSubmit)="SubmitRegistration()" class="register-form">
+
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username" class="form-label">Felhasználónév</label>
+          <input
+            type="text"
+            id="username"
+            formControlName="UserName"
+            class="form-input"
+            [class.error]="registerform.get('UserName')?.invalid && registerform.get('UserName')?.touched"
+            placeholder="Add meg a felhasználóneved"
+          />
+          @if (registerform.get('UserName')?.invalid && registerform.get('UserName')?.touched) {
+            <div class="error-message">
+              <span>A felhasználónév megadása kötelező</span>
+            </div>
+          }
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email cím</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="Email"
+            class="form-input"
+            [class.error]="registerform.get('Email')?.invalid && registerform.get('Email')?.touched"
+            placeholder="pelda@email.com"
+          />
+          @if (registerform.get('Email')?.invalid && registerform.get('Email')?.touched) {
+            <div class="error-message">
+              @if (registerform.get('Email')?.errors?.['required']) {
+                <span>Az email cím megadása kötelező</span>
+              }
+              @if (registerform.get('Email')?.errors?.['email']) {
+                <span>Érvénytelen email cím formátum</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Jelszó</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="Password"
+            class="form-input"
+            [class.error]="registerform.get('Password')?.invalid && registerform.get('Password')?.touched"
+            placeholder="Minimum 8 karakter és tartalmazzon számot"
+          />
+          @if (registerform.get('Password')?.invalid && registerform.get('Password')?.touched) {
+            <div class="error-message">
+              <span>A jelszó megadása kötelező</span>
+            </div>
+          }
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+          <p class="terms-text">
+            A regisztrációval elfogadod az
+            <a href="#" class="terms-link">Általános Szerződési Feltételeket</a>
+            és az
+            <a href="#" class="terms-link">Adatvédelmi Nyilatkozatot</a>.
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="registerform.invalid"
+        >
+          Fiók létrehozása
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>vagy</span>
+      </div>
+
+      <!-- Login Link -->
+      <div class="login-section">
+        <p class="login-text">Már van fiókod?</p>
+        <a routerLink="/bejelentkezes" class="login-link">Bejelentkezés</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

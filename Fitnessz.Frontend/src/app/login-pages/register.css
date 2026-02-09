@@ -1,5 +1,5 @@
-/* Login Container */
-.login-container {
+/* Register Container */
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,14 +8,14 @@
   background-color: #121212;
 }
 
-/* Login Wrapper */
-.login-wrapper {
+/* Register Wrapper */
+.register-wrapper {
   width: 100%;
   max-width: 450px;
 }
 
-/* Login Card */
-.login-card {
+/* Register Card */
+.register-card {
   background-color: #1e1e1e;
   border: 1px solid #2a2a2a;
   border-radius: 12px;
@@ -23,27 +23,27 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Login Header */
-.login-header {
+/* Register Header */
+.register-header {
   text-align: center;
   margin-bottom: 32px;
 }
 
-.login-title {
+.register-title {
   color: #ffffff;
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 8px;
 }
 
-.login-subtitle {
+.register-subtitle {
   color: #888888;
   font-size: 15px;
   line-height: 1.5;
 }
 
-/* Login Form */
-.login-form {
+/* Register Form */
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -97,20 +97,24 @@
   margin-top: -4px;
 }
 
-/* Forgot Password */
-.forgot-password {
-  text-align: right;
+/* Terms Section */
+.terms-section {
   margin-top: -8px;
 }
 
-.forgot-link {
-  color: #5b9fff;
+.terms-text {
+  color: #888888;
   font-size: 13px;
+  line-height: 1.6;
+}
+
+.terms-link {
+  color: #5b9fff;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.forgot-link:hover {
+.terms-link:hover {
   color: #2e69ff;
   text-decoration: underline;
 }
@@ -165,42 +169,41 @@
   font-size: 14px;
 }
 
-/* Sign Up Section */
-.signup-section {
+/* Login Section */
+.login-section {
   text-align: center;
 }
 
-.signup-text {
+.login-text {
   color: #888888;
   font-size: 14px;
   margin-bottom: 8px;
 }
 
-.signup-link {
+.login-link {
   color: #5b9fff;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s;
-  cursor: pointer;
 }
 
-.signup-link:hover {
+.login-link:hover {
   color: #2e69ff;
   text-decoration: underline;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
-  .login-card {
+  .register-card {
     padding: 28px 24px;
   }
 
-  .login-title {
+  .register-title {
     font-size: 24px;
   }
 
-  .login-subtitle {
+  .register-subtitle {
     font-size: 14px;
   }
 
@@ -212,5 +215,9 @@
   .submit-btn {
     padding: 12px 20px;
     font-size: 15px;
+  }
+
+  .terms-text {
+    font-size: 12px;
   }
 }

@@ -11,7 +11,7 @@
       </div>
 
       <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <form [formGroup]="loginForm" (ngSubmit)="SubmitLogin()" class="login-form">
 
         <!-- Email Field -->
         <div class="form-group">
@@ -19,7 +19,7 @@
           <input
             type="email"
             id="email"
-            formControlName="email"
+            formControlName="Email"
             class="form-input"
             [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
             placeholder="pelda@email.com"
@@ -42,7 +42,7 @@
           <input
             type="password"
             id="password"
-            formControlName="password"
+            formControlName="Password"
             class="form-input"
             [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
             placeholder="••••••••"
@@ -78,7 +78,7 @@
       <!-- Sign Up Link -->
       <div class="signup-section">
         <p class="signup-text">Még nincs fiókod?</p>
-        <a routerLink="/register" class="signup-link">Regisztráció</a>
+        <a routerLink="/regisztralas" class="signup-link">Regisztráció</a>
       </div>
 
     </div>
