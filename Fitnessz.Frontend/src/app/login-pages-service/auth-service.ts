@@ -28,7 +28,6 @@ export class AuthService {
       } )
     );
   }
-  //new implementation register
   Register(credentials : any)
   {
     return this.http.post<any>(`${this.apiRoute}/register`, credentials).pipe(
