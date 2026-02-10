@@ -3,11 +3,13 @@ import {ExploreService, ThreadPreview} from '../community-pages-service/explore-
 import {toSignal, toObservable} from '@angular/core/rxjs-interop';
 import {switchMap} from 'rxjs';
 import {DatePipe} from '@angular/common';
+import {CreateThreadButton} from '../Icons/create-thread-button';
 
 @Component({
   selector: 'app-categories',
   imports: [
-    DatePipe
+    DatePipe,
+    CreateThreadButton
   ],
   templateUrl: './categories.html',
   styleUrl: './categories.css',

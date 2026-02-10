@@ -3,10 +3,11 @@ import {ExploreService, ThreadPreview} from '../community-pages-service/explore-
 import {toSignal} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
+import {CreateThreadButton} from '../Icons/create-thread-button';
 
 @Component({
   selector: 'app-explore',
-  imports: [DatePipe],
+  imports: [DatePipe, CreateThreadButton],
   templateUrl: './explore.html',
   styleUrl: './explore.css',
 })
