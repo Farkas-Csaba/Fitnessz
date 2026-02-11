@@ -21,15 +21,15 @@
             id="email"
             formControlName="Email"
             class="form-input"
-            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            [class.error]="loginForm.get('Email')?.invalid && loginForm.get('Email')?.touched"
             placeholder="pelda@email.com"
           />
-          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          @if (loginForm.get('Email')?.invalid && loginForm.get('Email')?.touched) {
             <div class="error-message">
-              @if (loginForm.get('email')?.errors?.['required']) {
+              @if (loginForm.get('Email')?.errors?.['required']) {
                 <span>Az email cím megadása kötelező</span>
               }
-              @if (loginForm.get('email')?.errors?.['email']) {
+              @if (loginForm.get('Email')?.errors?.['email']) {
                 <span>Érvénytelen email cím formátum</span>
               }
             </div>
@@ -44,10 +44,10 @@
             id="password"
             formControlName="Password"
             class="form-input"
-            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            [class.error]="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched"
             placeholder="••••••••"
           />
-          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          @if (loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched) {
             <div class="error-message">
               <span>A jelszó megadása kötelező</span>
             </div>
@@ -63,9 +63,12 @@
         <button
           type="submit"
           class="submit-btn"
-          [disabled]="loginForm.invalid"
-        >
+          [disabled]="loginForm.invalid || isLoading()"
+        >@if (isLoading()) {
+          Betöltés...
+        } @else {
           Bejelentkezés
+        }
         </button>
 
       </form>

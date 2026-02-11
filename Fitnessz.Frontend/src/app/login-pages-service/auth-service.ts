@@ -1,13 +1,15 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs';
+import { tap} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  http = inject(HttpClient)
-  apiRoute = "https://localhost:5001/ForumAuth"
+  http = inject(HttpClient);
+  apiRoute = "https://localhost:5001/ForumAuth";
+  router = inject(Router);
 
   currentUser = signal<{username : string, token: string} | null>(null);
   isLoggedIn = computed(() => !!this.currentUser());
@@ -42,5 +44,6 @@ export class AuthService {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem("fitness_user");
     }
+    this.router.navigate(['']);
   }
 }

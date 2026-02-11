@@ -2,7 +2,13 @@
   <div class="top-bar-content">
     <button class="mobile-menu-btn">☰</button>
     <div class="logo">Fitnessz.hu</div>
-    <button routerLink="/bejelentkezes" class="login-btn">Bejelentkezés</button>
+    @if (authService.isLoggedIn())
+    {
+      <button (click)="authService.Logout()" class="logout-btn">Kijelentkezés</button>
+    } @else {
+      <button routerLink="/bejelentkezes" class="login-btn">Bejelentkezés</button>
+    }
+
   </div>
 </header>
 <div class="main-layout">

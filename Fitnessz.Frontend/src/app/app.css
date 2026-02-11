@@ -44,6 +44,17 @@ body {
   font-weight: 500;
   transition: background-color 0.2s;
 }
+.logout-btn {
+  background-color: #3a3939;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
 
 .login-btn:hover {
   background-color: #1557ff;

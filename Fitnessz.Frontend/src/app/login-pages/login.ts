@@ -1,7 +1,7 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../login-pages-service/auth-service';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +13,9 @@ export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute)
+
+  protected isLoading = signal(false);
 
   loginForm = this.fb.group(
     {
@@ -21,16 +24,21 @@ export class Login {
     });
   SubmitLogin() {
     if (this.loginForm.valid) {
-
+      this.isLoading.set(true);
       this.authService.Login(this.loginForm.value).subscribe({
         next: () => {
-          this.router.navigate(['']);
+          const queryparams = this.route.snapshot.queryParams['returnUrl'] || '';
+          this.router.navigate([queryparams]);
         },
         error: (err: any) => {
           console.error('Login failed', err);
           alert('Bejelentkezés sikertelen. Kérlek próbáld újra.');
+          this.isLoading.set(false);
         }
       });
+    }
+    else {
+      this.loginForm.markAllAsTouched();
     }
   }
 }

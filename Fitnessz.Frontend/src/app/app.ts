@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
+import {AuthService} from './login-pages-service/auth-service';
 
 
 @Component({
@@ -10,5 +11,5 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 
 })
 export class App {
-
+  protected authService = inject(AuthService);
 }

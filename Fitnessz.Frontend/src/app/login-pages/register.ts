@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../login-pages-service/auth-service';
 import {Router, RouterLink} from '@angular/router';
@@ -14,6 +14,8 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  isLoading = signal(false);
+
   registerform = this.fb.group(
     {
       UserName: ['', [Validators.required]],
@@ -25,6 +27,7 @@ export class Register {
   {
     if (this.registerform.valid)
     {
+      this.isLoading.set(true);
       this.authService.Register(this.registerform.value).subscribe({
         next: () => {
           this.router.navigate(['']);
@@ -32,6 +35,7 @@ export class Register {
         error: (err: any) => {
           console.error('Registration failed', err);
           alert('Regisztráció sikertelen. Kérlek próbáld újra.');
+          this.isLoading.set(false);
         }
       });
     }

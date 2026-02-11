@@ -1,4 +1,3 @@
-/* Login Container */
 .login-container {
   display: flex;
   justify-content: center;
@@ -8,13 +7,11 @@
   background-color: #121212;
 }
 
-/* Login Wrapper */
 .login-wrapper {
   width: 100%;
   max-width: 450px;
 }
 
-/* Login Card */
 .login-card {
   background-color: #1e1e1e;
   border: 1px solid #2a2a2a;
@@ -22,8 +19,6 @@
   padding: 40px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-
-/* Login Header */
 .login-header {
   text-align: center;
   margin-bottom: 32px;
@@ -90,14 +85,12 @@
   border-color: #ff4444;
 }
 
-/* Error Message */
 .error-message {
   color: #ff4444;
   font-size: 13px;
   margin-top: -4px;
 }
 
-/* Forgot Password */
 .forgot-password {
   text-align: right;
   margin-top: -8px;
@@ -115,7 +108,6 @@
   text-decoration: underline;
 }
 
-/* Submit Button */
 .submit-btn {
   background: linear-gradient(135deg, #2e69ff 0%, #5b9fff 100%);
   color: #ffffff;
@@ -131,20 +123,12 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(46, 105, 255, 0.4);
 }
 
 .submit-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.submit-btn:disabled {
-  background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Divider */
 .divider {
   display: flex;
   align-items: center;
@@ -165,7 +149,6 @@
   font-size: 14px;
 }
 
-/* Sign Up Section */
 .signup-section {
   text-align: center;
 }
@@ -190,7 +173,6 @@
   text-decoration: underline;
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .login-card {
     padding: 28px 24px;
@@ -213,4 +195,10 @@
     padding: 12px 20px;
     font-size: 15px;
   }
+  .submit-btn:disabled {
+    background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
 }

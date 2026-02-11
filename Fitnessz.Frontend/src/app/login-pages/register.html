@@ -22,7 +22,7 @@
             formControlName="UserName"
             class="form-input"
             [class.error]="registerform.get('UserName')?.invalid && registerform.get('UserName')?.touched"
-            placeholder="Add meg a felhasználóneved"
+            placeholder="Szóköz nélkül"
           />
           @if (registerform.get('UserName')?.invalid && registerform.get('UserName')?.touched) {
             <div class="error-message">
@@ -67,12 +67,16 @@
           />
           @if (registerform.get('Password')?.invalid && registerform.get('Password')?.touched) {
             <div class="error-message">
-              <span>A jelszó megadása kötelező</span>
+              @if (registerform.get('Password')?.errors?.['required']) {
+                <span>A jelszó megadása kötelező</span>
+              }
+              @if (registerform.get('Password')?.errors?.['minlength']) {
+                <span>A jelszónak legalább 8 karakternek kell lennie</span>
+              }
             </div>
           }
         </div>
 
-        <!-- Terms and Conditions -->
         <div class="terms-section">
           <p class="terms-text">
             A regisztrációval elfogadod az
@@ -82,13 +86,16 @@
           </p>
         </div>
 
-        <!-- Submit Button -->
         <button
           type="submit"
           class="submit-btn"
-          [disabled]="registerform.invalid"
-        >
+          [disabled]="registerform.invalid || isLoading()"
+        >@if (isLoading())
+        {
+          Betöltés
+        } @else {
           Fiók létrehozása
+        }
         </button>
 
       </form>
