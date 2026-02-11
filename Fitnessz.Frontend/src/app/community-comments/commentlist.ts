@@ -17,7 +17,7 @@ export class Commentlist {
 
   threadId = input.required<string>();
 
-  comments = toSignal(toObservable(this.threadId).pipe(switchMap(id => this.service.GetCommentsByThreadId(+id))
+  comments = toSignal(toObservable(this.threadId).pipe(switchMap(id => this.service.getCommentsByThreadId(+id))
     ),
     { initialValue: [] }
   );

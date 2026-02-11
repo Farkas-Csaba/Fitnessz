@@ -21,13 +21,13 @@ export class Categories {
   id = input.required<string>();
   threads = toSignal(
     toObservable(this.id).pipe(
-      switchMap(categoryId => this.service.GetThreadsByCategory(+categoryId))
+      switchMap(categoryId => this.service.getThreadsByCategory(+categoryId))
     ),
     { initialValue: [] }
   );
 
   goToThread(thread: ThreadPreview)
   {
-    this.service.NavigateToThread(thread);
+    this.service.navigateToThread(thread);
   }
 }

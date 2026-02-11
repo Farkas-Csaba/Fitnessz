@@ -1,6 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
+import {Category} from '../community-pages/create-thread/create-thread';
+import {Observable} from 'rxjs';
 
 export interface ThreadPreview{
   threadId : number,
@@ -32,29 +34,35 @@ export class ExploreService {
   private http = inject(HttpClient);
   private threadApiUrl = "https://localhost:5001/ForumThread";
   private postApiUrl = "https://localhost:5001/ForumPost";
+  private categoryApiUrl = "https://localhost:5001/ForumCategory";
   private router = inject(Router);
 
-  NavigateToThread(thread : ThreadPreview)
+  navigateToThread(thread : ThreadPreview)
   {
-    this.router.navigate(['egeszthread', thread.threadId])
+    this.router.navigate(['egeszthread', thread.threadId]);
   }
 
-  GetExplorePageThreads (){
+  getExplorePageThreads (){
     return this.http.get<ThreadPreview[]>(this.threadApiUrl);
   }
 
-  GetThreadsByCategory(categoryId : number) {
+  getThreadsByCategory(categoryId : number) {
     return this.http.get<ThreadPreview[]>(`${this.threadApiUrl}/category/${categoryId}`);
   }
 
-  GetFullThreadByThreadID(threadId: number)
+  getFullThreadByThreadID(threadId: number)
   {
     return this.http.get<Thread>(`${this.threadApiUrl}/${threadId}`);
   }
 
-  GetCommentsByThreadId(threadId: number)
+  getCommentsByThreadId(threadId: number)
   {
-    return this.http.get<Post[]>(`${this.postApiUrl}/${threadId}/posts`)
+    return this.http.get<Post[]>(`${this.postApiUrl}/${threadId}/posts`);
   }
+  getCategories(): Observable<Category[]>
+  {
+    return this.http.get<Category[]>(this.categoryApiUrl);
+  }
+
 
 }

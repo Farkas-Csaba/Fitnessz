@@ -26,7 +26,7 @@ public class ForumCategoryController : ControllerBase
         var response = categories.Select(c => new CategoryResponseDTO()
         {
             CategoryId = c.CategoryId,
-            CategoryName = c.Name
+            Name = c.Name
         });
         return Ok(response);
     }

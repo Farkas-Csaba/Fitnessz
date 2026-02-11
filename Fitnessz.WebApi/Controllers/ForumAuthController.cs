@@ -15,11 +15,13 @@ public class ForumAuthController : ControllerBase
 {
     private readonly UserManager<User> _userManagerRepo;
     private readonly IConfiguration _configuration;
+    private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-    public ForumAuthController(UserManager<User> userManagerRepo, IConfiguration configuration )
+    public ForumAuthController(UserManager<User> userManagerRepo, IConfiguration configuration, RoleManager<IdentityRole<int>> roleManager)
     {
         _userManagerRepo = userManagerRepo;
         _configuration = configuration;
+        _roleManager = roleManager;
     }
 
     [HttpPost("register")]
@@ -46,7 +48,13 @@ public class ForumAuthController : ControllerBase
             {
                 return BadRequest("Registration failed");
             }
-            var token = GenerateJwtToken(user);
+            if (!await _roleManager.RoleExistsAsync("User")) 
+            {
+                await _roleManager.CreateAsync(new IdentityRole<int>("User"));
+            }
+            await _userManagerRepo.AddToRoleAsync(user, "User");
+            var roles = new List<string> { "User" };
+            var token = GenerateJwtToken(user, roles);
 
             return Ok(new {token = token, username = user.UserName });
         }
@@ -67,12 +75,13 @@ public class ForumAuthController : ControllerBase
         var result = await _userManagerRepo.CheckPasswordAsync(user, loginDto.Password);
         if (!result) return Unauthorized("Invalid credentials");
 
-        var token = GenerateJwtToken(user);
+        var roles = await _userManagerRepo.GetRolesAsync(user);
+        var token = GenerateJwtToken(user, roles);
 
         return Ok(new { token = token, username = user.UserName });
     }
 
-    public string GenerateJwtToken(User user)
+    private string GenerateJwtToken(User user, IList<string> roles)
     {
         var claims = new List<Claim>
         {
@@ -80,7 +89,10 @@ public class ForumAuthController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Name, user.UserName!)
         };
-        
+        foreach (string role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

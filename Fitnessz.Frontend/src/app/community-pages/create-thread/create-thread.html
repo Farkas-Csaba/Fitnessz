@@ -1,1 +1,118 @@
-<p>create-thread works!</p>
+<div class="create-thread-container">
+  <div class="create-thread-wrapper">
+
+
+    <div class="create-thread-card">
+
+      <div class="create-header">
+        <h1 class="create-title">Új poszt létrehozása</h1>
+        <p class="create-subtitle">Oszd meg gondolataidat a közösséggel</p>
+      </div>
+
+
+      <form [formGroup]="threadForm" (ngSubmit)="SubmitThread()" class="thread-form">
+
+
+        <div class="form-group">
+          <label for="category" class="form-label">Kategória *</label>
+          <select
+            id="category"
+            formControlName="CategoryId"
+            class="form-select"
+            [class.error]="threadForm.get('CategoryId')?.invalid && threadForm.get('CategoryId')?.touched"
+          >
+            <option value="" disabled>Válassz kategóriát...</option>
+            @for (category of categories(); track category.categoryId) {
+              <option [value]="category.categoryId">{{ category.name }}</option>
+            }
+          </select>
+          @if (threadForm.get('CategoryId')?.invalid && threadForm.get('CategoryId')?.touched) {
+            <div class="error-message">
+              <span>A kategória kiválasztása kötelező</span>
+            </div>
+          }
+        </div>
+
+        <!-- Title Field -->
+        <div class="form-group">
+          <label for="title" class="form-label">
+            Cím *
+            <span class="char-count">{{ threadForm.get('Title')?.value?.length || 0 }}/100</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            formControlName="Title"
+            class="form-input"
+            [class.error]="threadForm.get('Title')?.invalid && threadForm.get('Title')?.touched"
+            placeholder="Add meg a poszt címét"
+            maxlength="100"
+          />
+          @if (threadForm.get('Title')?.invalid && threadForm.get('Title')?.touched) {
+            <div class="error-message">
+              @if (threadForm.get('Title')?.errors?.['required']) {
+                <span>A cím megadása kötelező</span>
+              }
+              @if (threadForm.get('Title')?.errors?.['minlength']) {
+                <span>A cím legalább 3 karakter hosszú legyen</span>
+              }
+              @if (threadForm.get('Title')?.errors?.['maxLength']) {
+                <span>A cím maximum 100 karakter hosszú legyen</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Content Field -->
+        <div class="form-group">
+          <label for="content" class="form-label">
+            Tartalom
+            <span class="char-count">{{ threadForm.get('Content')?.value?.length || 0 }}/2000</span>
+          </label>
+          <textarea
+            id="content"
+            formControlName="Content"
+            class="form-textarea"
+            [class.error]="threadForm.get('Content')?.invalid && threadForm.get('Content')?.touched"
+            placeholder="Írd le részletesen, amit meg szeretnél osztani..."
+            rows="10"
+            maxlength="2000"
+          ></textarea>
+          @if (threadForm.get('Content')?.invalid && threadForm.get('Content')?.touched) {
+            <div class="error-message">
+              @if (threadForm.get('Content')?.errors?.['maxlength']) {
+                <span>A tartalom maximum 2000 karakter lehet</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="CancelCreation()"
+            [disabled]="isLoading()"
+          >
+            Mégse
+          </button>
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="threadForm.invalid || isLoading()"
+          >
+            @if (isLoading()) {
+              <span>Közzététel...</span>
+            } @else {
+              <span>Poszt közzététele</span>
+            }
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>

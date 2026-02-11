@@ -13,11 +13,11 @@ import {CreateThreadButton} from '../Icons/create-thread-button';
 })
 export class Explore {
   private router = inject(Router);
-  private service = inject(ExploreService); //read docs on whether this should be private
-  threads = toSignal(this.service.GetExplorePageThreads(), {initialValue: []})
+  private service = inject(ExploreService);
+  threads = toSignal(this.service.getExplorePageThreads(), {initialValue: []})
 
   goToThread(thread : ThreadPreview)
   {
-    this.service.NavigateToThread(thread);
+    this.service.navigateToThread(thread);
   }
 }

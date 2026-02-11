@@ -22,7 +22,7 @@ export class Fullthread {
 
   thread = toSignal(
     toObservable(this.id).pipe(
-      switchMap(id => this.service.GetFullThreadByThreadID(+id))
+      switchMap(id => this.service.getFullThreadByThreadID(+id))
     )
   );
 }

@@ -1,0 +1,265 @@
+
+.create-thread-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #121212;
+}
+
+.create-thread-wrapper {
+  width: 100%;
+  max-width: 800px;
+}
+
+.create-thread-card {
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Create Header */
+.create-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.create-title {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+
+.thread-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  color: #e0e0e0;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-count {
+  color: #666666;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Form Input */
+.form-input {
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: #666666;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2e69ff;
+  background-color: #252525;
+}
+
+.form-input.error {
+  border-color: #ff4444;
+}
+
+.form-input.error:focus {
+  border-color: #ff4444;
+}
+
+/* Form Select */
+.form-select {
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #2e69ff;
+  background-color: #252525;
+}
+
+.form-select option {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+.form-select option:disabled {
+  color: #666666;
+}
+
+.form-select.error {
+  border-color: #ff4444;
+}
+
+.form-select.error:focus {
+  border-color: #ff4444;
+}
+
+.form-textarea {
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 200px;
+  transition: all 0.2s ease;
+}
+
+.form-textarea::placeholder {
+  color: #666666;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #2e69ff;
+  background-color: #252525;
+}
+
+.form-textarea.error {
+  border-color: #ff4444;
+}
+
+.form-textarea.error:focus {
+  border-color: #ff4444;
+}
+
+/* Error Message */
+.error-message {
+  color: #ff4444;
+  font-size: 13px;
+  margin-top: -4px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-btn,
+.submit-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: #888888;
+  border: 1px solid #3a3a3a;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.submit-btn {
+  background-color: #2e69ff;
+  color: #ffffff;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #1557ff;
+  transform: translateY(-2px);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cancel-btn:disabled,
+.submit-btn:disabled {
+  background-color: #3a3a3a;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-thread-container {
+    padding: 20px 16px;
+  }
+
+  .create-thread-card {
+    padding: 28px 24px;
+  }
+
+  .create-title {
+    font-size: 24px;
+  }
+
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-title {
+    font-size: 22px;
+  }
+
+  .form-textarea {
+    min-height: 150px;
+  }
+}

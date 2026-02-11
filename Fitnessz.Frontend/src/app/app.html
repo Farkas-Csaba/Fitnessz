@@ -1,7 +1,7 @@
 <header class="top-bar">
   <div class="top-bar-content">
     <button class="mobile-menu-btn">☰</button>
-    <div class="logo">Fitnessz.hu</div>
+    <div class="logo" routerLink="">Fitnessz.hu</div>
     @if (authService.isLoggedIn())
     {
       <button (click)="authService.Logout()" class="logout-btn">Kijelentkezés</button>
