@@ -38,6 +38,7 @@ public class ForumThreadController : ControllerBase
         ThreadResponseDTO response = new ThreadResponseDTO()
         {
             ThreadId = thread.ThreadId,
+            CategoryId = thread.CategoryId,
             Title = thread.Title,
             Content = thread.Content ?? "",
             AuthorName = thread.User?.UserName ?? "Unknown",

@@ -35,7 +35,7 @@ export class CreateThread implements OnInit{
   ngOnInit() {
     this.loadCategories();
   }
-  loadCategories() {
+  public loadCategories() {
     this.exploreService.getCategories().subscribe(
       {
         next: (data) =>

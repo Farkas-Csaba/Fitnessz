@@ -14,6 +14,7 @@ export interface ThreadPreview{
 }
 export interface Thread{
   threadId : number,
+  categoryId: number,
   title : string,
   authorName: string,
   categoryName: string,

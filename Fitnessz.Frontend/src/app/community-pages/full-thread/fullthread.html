@@ -6,6 +6,25 @@
       <span class="category-badge">{{ thread()?.categoryName }}</span>
       <h1 class="thread-title">{{ thread()?.title }}</h1>
 
+      @if (isAuthor()) {
+        <div class="thread-actions">
+          <button class="kebab-btn" (click)="toggleMenu($event)">
+            <i class="kebab-icon">⋮</i>
+          </button>
+
+          @if (showMenu()) {
+            <div class="action-dropdown">
+              <button class="dropdown-item" (click)="editThread()">
+                <span class="icon">✏️</span> Szerkesztés
+              </button>
+              <button class="dropdown-item delete" (click)="deleteThread()">
+                <span class="icon">🗑️</span> Törlés
+              </button>
+            </div>
+          }
+        </div>
+      }
+
       <!-- Thread Content -->
       <div class="thread-content">
         <p>{{ thread()?.content }}</p>

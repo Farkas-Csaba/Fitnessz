@@ -5,11 +5,11 @@
     <div class="create-thread-card">
 
       <div class="create-header">
-        <h1 class="create-title">Új poszt létrehozása</h1>
+        <h1 class="create-title">Poszt szerkesztése</h1>
       </div>
 
 
-      <form [formGroup]="threadForm" (ngSubmit)="SubmitThread()" class="thread-form">
+      <form [formGroup]="threadForm" (ngSubmit)="updateThread()" class="thread-form">
 
 
         <div class="form-group">
@@ -102,9 +102,9 @@
             [disabled]="threadForm.invalid || isLoading()"
           >
             @if (isLoading()) {
-              <span>Közzététel...</span>
+              <span>Szerkesztés...</span>
             } @else {
-              <span>Poszt közzététele</span>
+              <span>Poszt szerkesztése</span>
             }
           </button>
         </div>
@@ -115,3 +115,4 @@
 
   </div>
 </div>
+
