@@ -3,6 +3,7 @@ import {CreateService, ThreadObject} from '../../community-pages-service/create-
 import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ExploreService} from '../../community-pages-service/explore-service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface Category { //interface for type safety
   categoryId: number,
@@ -20,6 +21,7 @@ export class CreateThread implements OnInit{
   private exploreService = inject(ExploreService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private snackbar = inject(MatSnackBar);
 
   categories = signal<Category[]>([]); // holds categories from api call
   isLoading = signal(false);
@@ -44,7 +46,9 @@ export class CreateThread implements OnInit{
         },
         error: (err) => {
           console.error('Failed to load categories', err);
-          alert('Nem sikerült betölteni a kategóriákat');
+          this.snackbar.open('Hibe történt a kategóriák betöltésekor! ❌', 'bezárás', {
+            duration: 3000
+          });
         }
       });
   }
@@ -62,12 +66,15 @@ export class CreateThread implements OnInit{
       };
       this.createService.createThread(threadData).subscribe({
         next: (response) => {
-          console.log('Thread created!', response); //look into this i heard side effects such as logging should be in seperate effect
+          this.snackbar.open('Sikeres feltöltés! ✅', 'Ok', {
+            duration: 3000
+          })
           this.router.navigate(['']);
         },
-        error: (err) => {
-          console.error('API Error:', err);
-          alert('Nem sikerült a posztolás. Próbáld újra!');
+        error: () => {
+          this.snackbar.open('Hiba történt posztoláskor! ❌', 'Bezár', {
+            duration: 3000
+          });
           this.isLoading.set(false);
         }
       });
@@ -78,6 +85,6 @@ export class CreateThread implements OnInit{
   }
   CancelCreation()
   {
-    this.router.navigate(['']); //maybe '/'
+    this.router.navigate(['']);
   }
 }

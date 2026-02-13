@@ -7,6 +7,7 @@ import {Commentlist} from '../../community-comments/commentlist';
 import {AuthService} from '../../login-pages-service/auth-service';
 import {DeleteUpdateService} from '../../community-pages-service/delete-update-service';
 import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fullthread',
@@ -22,6 +23,7 @@ export class Fullthread {
 
   id = input.required<string>();
   private exploreService = inject(ExploreService);
+  private snackbar = inject(MatSnackBar);
 
   showMenu = signal(false);
   private authService = inject(AuthService);
@@ -63,11 +65,15 @@ export class Fullthread {
       this.deleteUpdateService.deleteThread(+this.id()).subscribe(
         {
           next: () => {
+            this.snackbar.open('Sikeres törlés! 🗑️', 'Ok', {
+              duration: 3000
+            })
             this.router.navigate(['']);
           },
-          error: (err) => {
-            console.error('Törlési hiba:', err);
-            alert("Nem sikerült a törlés, próbálja újra");
+          error: () => {
+            this.snackbar.open("Sikertelen a törlés, próbálja újra! ❌", 'Bezárás', {
+              duration: 3000
+            });
           }
         }
       )

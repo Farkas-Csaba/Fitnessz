@@ -44,7 +44,7 @@ export class EditThread implements OnInit {
           this.categories.set(data);
         },
         error: (err) => {
-          this.snackbar.open('Hiba a kategóriák betöltésekor! ❌', 'Bezárás', {
+          this.snackbar.open('Hiba a kategóriák betöltésekor! ❌', 'Bezár', {
             duration: 3000
           }); //new snack
         }
@@ -62,7 +62,7 @@ export class EditThread implements OnInit {
           Content: thread.content
         });
       },
-      error: () => this.snackbar.open('Hiba a poszt adatainak lekérésekor! ❌', 'Bezárás', {
+      error: () => this.snackbar.open('Hiba a poszt adatainak lekérésekor! ❌', 'Bezár', {
         duration: 3000
       }) //new snack
     });
@@ -81,14 +81,14 @@ export class EditThread implements OnInit {
 
       this.deleteUpdateService.updateThread(updatedData,Number(this.id())).subscribe({
         next: () => {
-          this.snackbar.open('Sikeres szerkesztés! ✅', 'Bezár', {
+          this.snackbar.open('Sikeres szerkesztés! ✅', 'Ok', {
             duration: 3000
           })
           this.router.navigate(['egeszthread', this.id()]);
         },
         error: () => {
           this.isLoading.set(false);
-          this.snackbar.open('Hiba történt mentéskor! ❌', 'Bezárás',{
+          this.snackbar.open('Hiba történt mentéskor! ❌', 'Bezár',{
             duration: 3000
           }); //new snack
         }
