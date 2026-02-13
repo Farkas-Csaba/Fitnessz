@@ -8,6 +8,8 @@ import {AuthService} from '../../login-pages-service/auth-service';
 import {DeleteUpdateService} from '../../community-pages-service/delete-update-service';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Dialog} from '@angular/cdk/dialog';
+import {DeleteConfirmCdk} from '../../ui-components/delete-confirm-cdk';
 
 @Component({
   selector: 'app-fullthread',
@@ -24,6 +26,7 @@ export class Fullthread {
   id = input.required<string>();
   private exploreService = inject(ExploreService);
   private snackbar = inject(MatSnackBar);
+  private dialog = inject(Dialog);
 
   showMenu = signal(false);
   private authService = inject(AuthService);
@@ -58,6 +61,33 @@ export class Fullthread {
     this.router.navigate(['/posztszerkesztes',+this.id()])
   }
 
+  openDeleteModal()
+  {
+    const dialogRef = this.dialog.open<boolean>(DeleteConfirmCdk, {
+      width: '400px',
+      backdropClass: 'custom-backdrop'
+    });
+
+    dialogRef.closed.subscribe(result => {
+      if (result) {
+        this.deleteUpdateService.deleteThread(+this.id()).subscribe(
+          {
+            next: () => {
+              this.snackbar.open('Sikeres törlés! 🗑️', 'Ok', {
+                duration: 3000
+              })
+              this.router.navigate(['']);
+            },
+            error: () => {
+              this.snackbar.open("Sikertelen a törlés, próbálja újra! ❌", 'Bezárás', {
+                duration: 3000
+              });
+            }
+          })
+      }
+    });
+  }
+    /*
   deleteThread()
   {
     if (confirm("Biztosan törölni szeretné?"))
@@ -79,6 +109,6 @@ export class Fullthread {
       )
     }
   }
-
+*/
 
 }

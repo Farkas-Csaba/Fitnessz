@@ -16,10 +16,23 @@
   border: 1px solid #2e69ff !important;
 }
 
+/* snackbar styles */
 .mat-mdc-snack-bar-label {
   color: white !important;
 }
 
 .mat-mdc-snack-bar-action button {
   color: #2e69ff !important;
+}
+
+/* Modals styles */
+cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
