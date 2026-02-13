@@ -4,6 +4,7 @@ import {ExploreService} from '../../community-pages-service/explore-service';
 import {Category, CreateThread} from '../create-thread/create-thread';
 import {DeleteUpdateService} from '../../community-pages-service/delete-update-service';
 import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-thread',
@@ -16,6 +17,7 @@ export class EditThread implements OnInit {
   private exploreService = inject(ExploreService);
   private deleteUpdateService = inject(DeleteUpdateService);
   private router = inject(Router);
+  private snackbar = inject(MatSnackBar);
 
   id = input.required<string>();
   categories = signal<Category[]>([]);
@@ -42,14 +44,15 @@ export class EditThread implements OnInit {
           this.categories.set(data);
         },
         error: (err) => {
-          console.error('Failed to load categories', err);
-          alert('Nem sikerült betölteni a kategóriákat');
+          this.snackbar.open('Hiba a kategóriák betöltésekor! ❌', 'Bezárás', {
+            duration: 3000
+          }); //new snack
         }
       });
   }
   loadThreadData() {
     const threadId = Number(this.id());
-    // We use the same service you likely use for the detail view
+
     this.exploreService.getFullThreadByThreadID(threadId).subscribe({
       next: (thread) => {
 
@@ -59,7 +62,9 @@ export class EditThread implements OnInit {
           Content: thread.content
         });
       },
-      error: () => alert('Hiba a poszt adatainak lekérésekor')
+      error: () => this.snackbar.open('Hiba a poszt adatainak lekérésekor! ❌', 'Bezárás', {
+        duration: 3000
+      }) //new snack
     });
   }
 
@@ -75,10 +80,17 @@ export class EditThread implements OnInit {
 
 
       this.deleteUpdateService.updateThread(updatedData,Number(this.id())).subscribe({
-        next: () => this.router.navigate(['egeszthread', this.id()]),
+        next: () => {
+          this.snackbar.open('Sikeres szerkesztés! ✅', 'Bezár', {
+            duration: 3000
+          })
+          this.router.navigate(['egeszthread', this.id()]);
+        },
         error: () => {
           this.isLoading.set(false);
-          alert('Szerkesztés sikertelen!');
+          this.snackbar.open('Hiba történt mentéskor! ❌', 'Bezárás',{
+            duration: 3000
+          }); //new snack
         }
       });
     }

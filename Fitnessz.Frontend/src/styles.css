@@ -10,3 +10,16 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: #1e1e1e !important;
+  border: 1px solid #2e69ff !important;
+}
+
+.mat-mdc-snack-bar-label {
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-action button {
+  color: #2e69ff !important;
+}
