@@ -14,6 +14,7 @@ export class AuthService {
   currentUser = signal<{username : string, token: string} | null>(null);
   isLoggedIn = computed(() => !!this.currentUser());
   constructor() {
+    //should this be an effect?
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedUser = localStorage.getItem('fitness_user');
       if (savedUser) {
