@@ -3,8 +3,8 @@
 
     <!-- Thread Post Card -->
     <div class="thread-header">
-      <span class="category-badge">{{ thread()?.categoryName }}</span>
-      <h1 class="thread-title">{{ thread()?.title }}</h1>
+      <span class="category-badge">{{ thread.value()?.categoryName }}</span>
+      <h1 class="thread-title">{{ thread.value()?.title }}</h1>
 
       @if (isAuthor()) {
         <div class="thread-actions">
@@ -27,15 +27,15 @@
 
       <!-- Thread Content -->
       <div class="thread-content">
-        <p>{{ thread()?.content }}</p>
+        <p>{{ thread.value()?.content }}</p>
       </div>
 
       <div class="thread-meta">
         <div class="author-info">
-          <div class="avatar">{{ thread()?.authorName?.charAt(0)?.toUpperCase() ?? 'A'}}</div>
+          <div class="avatar">{{ thread.value()?.authorName?.charAt(0)?.toUpperCase() ?? 'A'}}</div>
           <div class="author-details">
-            <span class="author-name">{{ thread()?.authorName }}</span>
-            <span class="post-date">{{ thread()?.createdAt | date:'yyyy. MMMM dd. HH:mm' }}</span>
+            <span class="author-name">{{ thread.value()?.authorName }}</span>
+            <span class="post-date">{{ thread.value()?.createdAt | date:'yyyy. MMMM dd. HH:mm' }}</span>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
 
     <!-- Comments Section with Defer -->
     @defer (on viewport) {
-      <app-commentlist [threadId]="id()"/>
+      <app-commentlist [threadId]="id().toString()"/>
     } @placeholder {
       <div class="comments-loading">
         <p>Válaszok betöltése...</p>

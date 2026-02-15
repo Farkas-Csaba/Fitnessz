@@ -1,7 +1,17 @@
-import {Component, computed, effect, HostListener, inject, input, signal} from '@angular/core';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {
+  Component,
+  computed,
+  effect,
+  HostListener,
+  inject,
+  input,
+  signal,
+  resource,
+  numberAttribute
+} from '@angular/core';
+import {rxResource, toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {switchMap} from 'rxjs';
-import {ExploreService} from '../../community-pages-service/explore-service';
+import {ExploreService, Thread} from '../../community-pages-service/explore-service';
 import {DatePipe} from '@angular/common';
 import {Commentlist} from '../../community-comments/commentlist';
 import {AuthService} from '../../login-pages-service/auth-service';
@@ -10,6 +20,7 @@ import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Dialog} from '@angular/cdk/dialog';
 import {DeleteConfirmCdk} from '../../ui-components/delete-confirm-cdk';
+import {threadId} from 'node:worker_threads';
 
 @Component({
   selector: 'app-fullthread',
@@ -19,31 +30,40 @@ import {DeleteConfirmCdk} from '../../ui-components/delete-confirm-cdk';
   ],
   templateUrl: './fullthread.html',
   styleUrl: './fullthread.css',
+  host: {
+    'document:click': 'closeMenu()'
+  }
 })
 export class Fullthread {
 
 
-  id = input.required<string>();
+  protected id = input.required({transform: numberAttribute});
   private exploreService = inject(ExploreService);
   private snackbar = inject(MatSnackBar);
   private dialog = inject(Dialog);
 
-  showMenu = signal(false);
+  protected showMenu = signal(false);
   private authService = inject(AuthService);
   private deleteUpdateService = inject(DeleteUpdateService);
   private router = inject(Router);
 
-  isAuthor = computed(() => {
+  protected isAuthor = computed(() => {
     const user = this.authService.currentUser();
-    return user?.username === this.thread()?.authorName;
+    return user?.username === this.thread.value()?.authorName;
 
   })
 
-  thread = toSignal(
-    toObservable(this.id).pipe(
-      switchMap(id => this.exploreService.getFullThreadByThreadID(+id))
-    )
-  );
+   protected thread = rxResource({
+     params: () => this.id(),
+     stream: (p) => this.exploreService.getFullThreadByThreadID(p.params)
+   });
+
+/*
+   thread = toSignal(
+     toObservable(this.id).pipe(
+       switchMap(id => this.exploreService.getFullThreadByThreadID(+id))
+     )
+   );*/
   toggleMenu(event: Event)
   {
     event.stopPropagation();
@@ -58,7 +78,7 @@ export class Fullthread {
 
   editThread()
   {
-    this.router.navigate(['/posztszerkesztes',+this.id()])
+    this.router.navigate(['/posztszerkesztes',this.id()])
   }
 
   openDeleteModal()
@@ -70,7 +90,7 @@ export class Fullthread {
 
     dialogRef.closed.subscribe(result => {
       if (result) {
-        this.deleteUpdateService.deleteThread(+this.id()).subscribe(
+        this.deleteUpdateService.deleteThread(this.id()).subscribe(
           {
             next: () => {
               this.snackbar.open('Sikeres törlés! 🗑️', 'Ok', {
@@ -87,28 +107,5 @@ export class Fullthread {
       }
     });
   }
-    /*
-  deleteThread()
-  {
-    if (confirm("Biztosan törölni szeretné?"))
-    {
-      this.deleteUpdateService.deleteThread(+this.id()).subscribe(
-        {
-          next: () => {
-            this.snackbar.open('Sikeres törlés! 🗑️', 'Ok', {
-              duration: 3000
-            })
-            this.router.navigate(['']);
-          },
-          error: () => {
-            this.snackbar.open("Sikertelen a törlés, próbálja újra! ❌", 'Bezárás', {
-              duration: 3000
-            });
-          }
-        }
-      )
-    }
-  }
-*/
 
 }
