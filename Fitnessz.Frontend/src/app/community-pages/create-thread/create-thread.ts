@@ -1,9 +1,11 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, signal} from '@angular/core';
 import {CreateService, ThreadObject} from '../../community-pages-service/create-service';
 import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ExploreService} from '../../community-pages-service/explore-service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {rxResource} from '@angular/core/rxjs-interop';
+
 
 export interface Category { //interface for type safety
   categoryId: number,
@@ -16,15 +18,35 @@ export interface Category { //interface for type safety
   templateUrl: './create-thread.html',
   styleUrl: './create-thread.css',
 })
-export class CreateThread implements OnInit{
+export class CreateThread{
   private createService = inject(CreateService);
   private exploreService = inject(ExploreService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private snackbar = inject(MatSnackBar);
 
-  categories = signal<Category[]>([]); // holds categories from api call
-  isLoading = signal(false);
+  protected categoriesResource = rxResource({
+    stream: () => this.exploreService.getCategories()
+  }) // holds categories from api call
+  protected isSubmitting = signal(false);
+
+  constructor() {
+    effect((onCleanup) => {
+      const error = this.categoriesResource.error();
+
+      if (error) {
+        const snackbarRef = this.snackbar.open('Hiba történt a kategóriák betöltésekor! ❌', 'bezárás', {
+          duration: 3000
+        });
+
+
+        onCleanup(() => {
+          snackbarRef.dismiss();
+        });
+      }
+    });
+  }
+
 
   threadForm = this.fb.group(
     {
@@ -33,7 +55,7 @@ export class CreateThread implements OnInit{
       Content: ['', [Validators.maxLength(2000)]]
     }
   )
-
+  /* NOT NEEDED because of rxResource
   ngOnInit() {
     this.loadCategories();
   }
@@ -52,17 +74,18 @@ export class CreateThread implements OnInit{
         }
       });
   }
+  */
 
   SubmitThread()
   {
     if (this.threadForm.valid)
     {
-      this.isLoading.set(true);
-
+      this.isSubmitting.set(true);
+      const rawValue = this.threadForm.getRawValue();
       const threadData: ThreadObject = {
-        title: this.threadForm.value.Title!,
-        content: this.threadForm.value.Content,
-        categoryId: Number(this.threadForm.value.CategoryId!)
+        title: rawValue.Title!,
+        content: rawValue.Content,
+        categoryId: Number(rawValue.CategoryId!)
       };
       this.createService.createThread(threadData).subscribe({
         next: (response) => {
@@ -75,7 +98,7 @@ export class CreateThread implements OnInit{
           this.snackbar.open('Hiba történt posztoláskor! ❌', 'Bezár', {
             duration: 3000
           });
-          this.isLoading.set(false);
+          this.isSubmitting.set(false);
         }
       });
     }
