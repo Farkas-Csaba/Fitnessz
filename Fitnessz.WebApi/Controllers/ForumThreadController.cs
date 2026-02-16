@@ -156,6 +156,7 @@ public class ForumThreadController : ControllerBase
 
         existingThread.Title = dto.Title;
         existingThread.Content = dto.Content;
+        existingThread.CategoryId = dto.CategoryId;
 
         await threadRepo.UpdateThreadAsync(existingThread);
         

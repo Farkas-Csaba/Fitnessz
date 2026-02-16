@@ -21,7 +21,7 @@
             [class.error]="threadForm.get('CategoryId')?.invalid && threadForm.get('CategoryId')?.touched"
           >
             <option value="" disabled>Válassz kategóriát...</option>
-            @for (category of categories(); track category.categoryId) {
+            @for (category of categories.value(); track category.categoryId) {
               <option [value]="category.categoryId">{{ category.name }}</option>
             }
           </select>
@@ -92,16 +92,16 @@
             type="button"
             class="cancel-btn"
             (click)="CancelCreation()"
-            [disabled]="isLoading()"
+            [disabled]="isSubmitting()"
           >
             Mégse
           </button>
           <button
             type="submit"
             class="submit-btn"
-            [disabled]="threadForm.invalid || isLoading()"
+            [disabled]="threadForm.invalid || isSubmitting() || categories.isLoading() || threadData.isLoading()"
           >
-            @if (isLoading()) {
+            @if (isSubmitting()) {
               <span>Szerkesztés...</span>
             } @else {
               <span>Poszt szerkesztése</span>
