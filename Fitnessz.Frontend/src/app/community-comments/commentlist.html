@@ -1,21 +1,17 @@
 <div class="comments-container">
   <div class="comments-wrapper">
 
-    <!-- Comments Header -->
     <div class="comments-header">
-      <h3 class="comments-title">Válaszok ({{ comments().length }})</h3>
+      <h3 class="comments-title">Válaszok ({{ comments.value()?.length ?? 0 }})</h3>
     </div>
 
-    <!-- No Comments State -->
-    @if (comments().length === 0) {
-      <div class="no-comments">
-        <p>Még nincsenek válaszok erre a posztra.</p>
-        <p class="subtext">Légy te az első, aki válaszol!</p>
+    @if (comments.isLoading()) {
+      <div class="loading-state">
+        <p>Válaszok betöltése...</p>
       </div>
     }
 
-    <!-- Comment List -->
-    @for (comment of comments(); track comment.postId) {
+    @for (comment of comments.value(); track comment.postId) {
       <div class="comment-card">
         <div class="comment-header">
           <div class="avatar">{{ comment.authorName.charAt(0).toUpperCase() }}</div>
@@ -28,18 +24,14 @@
         <div class="comment-content">
           <p>{{ comment.content }}</p>
         </div>
-
-        <div class="comment-actions">
-          <button class="comment-action-btn">
-            <span class="action-icon">👍</span>
-            <span>{{ 0 }}</span>
-          </button>
-          <button class="comment-action-btn">
-            <span class="action-icon">💬</span>
-            <span>Válasz</span>
-          </button>
-        </div>
       </div>
+    } @empty {
+      @if (!comments.isLoading()) {
+        <div class="no-comments">
+          <p>Még nincsenek válaszok erre a posztra.</p>
+          <p class="subtext">Légy te az első, aki válaszol!</p>
+        </div>
+      }
     }
 
   </div>
