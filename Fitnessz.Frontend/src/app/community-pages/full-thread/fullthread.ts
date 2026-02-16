@@ -58,12 +58,6 @@ export class Fullthread {
      stream: (p) => this.exploreService.getFullThreadByThreadID(p.params)
    });
 
-/*
-   thread = toSignal(
-     toObservable(this.id).pipe(
-       switchMap(id => this.exploreService.getFullThreadByThreadID(+id))
-     )
-   );*/
   toggleMenu(event: Event)
   {
     event.stopPropagation();

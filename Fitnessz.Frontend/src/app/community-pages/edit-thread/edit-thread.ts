@@ -74,45 +74,6 @@ export class EditThread {
     }
   )
 
-  /*
-  ngOnInit() {
-    this.loadCategories();
-    this.loadThreadData();
-  }
-
-
-  public loadCategories() {
-    this.exploreService.getCategories().subscribe(
-      {
-        next: (data) =>
-        {
-          this.categories.set(data);
-        },
-        error: (err) => {
-          this.snackbar.open('Hiba a kategóriák betöltésekor! ❌', 'Bezár', {
-            duration: 3000
-          }); //new snack
-        }
-      });
-  }
-  loadThreadData() {
-    const threadId = Number(this.id());
-
-    this.exploreService.getFullThreadByThreadID(threadId).subscribe({
-      next: (thread) => {
-
-        this.threadForm.patchValue({
-          CategoryId: thread.categoryId.toString(),
-          Title: thread.title,
-          Content: thread.content
-        });
-      },
-      error: () => this.snackbar.open('Hiba a poszt adatainak lekérésekor! ❌', 'Bezár', {
-        duration: 3000
-      }) //new snack
-    });
-  }
-  */
   updateThread() {
     if (this.threadForm.valid) {
       this.isSubmitting.set(true);

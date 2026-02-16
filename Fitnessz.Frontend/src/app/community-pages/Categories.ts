@@ -24,13 +24,6 @@ export class Categories {
     params: () => this.id(),
     stream: (p) => this.exploreService.getThreadsByCategory(p.params)
   })
-  /*
-  threads = toSignal(
-    toObservable(this.id).pipe(
-      switchMap(categoryId => this.service.getThreadsByCategory(+categoryId))
-    ),
-    { initialValue: [] }
-  );*/
 
   goToThread(thread: ThreadPreview)
   {

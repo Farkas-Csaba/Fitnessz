@@ -22,9 +22,4 @@ export class Commentlist {
       stream: (p) => this.eploreService.getCommentsByThreadId(p.params)
     }
   )
-  /*
-  comments = toSignal(toObservable(this.threadId).pipe(switchMap(id => this.service.getCommentsByThreadId(+id))
-    ),
-    { initialValue: [] }
-  );*/
 }

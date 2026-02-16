@@ -55,26 +55,6 @@ export class CreateThread{
       Content: ['', [Validators.maxLength(2000)]]
     }
   )
-  /* NOT NEEDED because of rxResource
-  ngOnInit() {
-    this.loadCategories();
-  }
-  public loadCategories() {
-    this.exploreService.getCategories().subscribe(
-      {
-        next: (data) =>
-        {
-          this.categories.set(data);
-        },
-        error: (err) => {
-          console.error('Failed to load categories', err);
-          this.snackbar.open('Hibe történt a kategóriák betöltésekor! ❌', 'bezárás', {
-            duration: 3000
-          });
-        }
-      });
-  }
-  */
 
   SubmitThread()
   {
