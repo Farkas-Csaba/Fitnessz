@@ -9,8 +9,8 @@ import {
   resource,
   numberAttribute
 } from '@angular/core';
-import {rxResource, toObservable, toSignal} from '@angular/core/rxjs-interop';
-import {switchMap} from 'rxjs';
+import {rxResource} from '@angular/core/rxjs-interop';
+
 import {ExploreService, Thread} from '../../community-pages-service/explore-service';
 import {DatePipe} from '@angular/common';
 import {Commentlist} from '../../community-comments/commentlist';

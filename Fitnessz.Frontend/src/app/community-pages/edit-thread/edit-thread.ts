@@ -27,7 +27,8 @@ export class EditThread {
     stream: () => this.exploreService.getCategories()
   })
   protected threadData = rxResource({
-    stream: () => this.exploreService.getFullThreadByThreadID(this.id())
+    params: () => this.id(),
+    stream: (p) => this.exploreService.getFullThreadByThreadID(p.params)
   })
 
   constructor() {
