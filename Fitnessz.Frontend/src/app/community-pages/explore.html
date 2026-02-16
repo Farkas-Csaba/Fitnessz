@@ -1,14 +1,14 @@
 <div class="explore-container">
   <div class="thread-list">
 
-    @if (threads().length === 0) {
+    @if (threads.isLoading()) {
       <div class="loading-text">
         <p>Posztok betöltése...</p>
       </div>
     }
 
 
-    @for (thread of threads(); track thread.threadId) {
+    @for (thread of threads.value(); track thread.threadId) {
       <div class="thread-card" (click)="goToThread(thread)">
         <div class="card-header">
           <span class="category-badge">{{ thread.categoryName }}</span>

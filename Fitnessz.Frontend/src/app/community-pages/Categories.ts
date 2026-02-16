@@ -16,13 +16,13 @@ import {CreateThreadButton} from '../Icons/create-thread-button';
   styleUrl: './categories.css',
 })
 export class Categories {
-   private exploreservice = inject(ExploreService);
+   private exploreService = inject(ExploreService);
 
   //Something is not right with this in development because of SSR lets keep an eye on it as we move to production
   id = input.required({transform: numberAttribute});
   threads = rxResource({
     params: () => this.id(),
-    stream: (p) => this.exploreservice.getThreadsByCategory(p.params)
+    stream: (p) => this.exploreService.getThreadsByCategory(p.params)
   })
   /*
   threads = toSignal(
@@ -34,6 +34,6 @@ export class Categories {
 
   goToThread(thread: ThreadPreview)
   {
-    this.exploreservice.navigateToThread(thread);
+    this.exploreService.navigateToThread(thread);
   }
 }
