@@ -1,6 +1,6 @@
-import {Component, inject, input} from '@angular/core';
+import {Component, inject, input, numberAttribute} from '@angular/core';
 import {ExploreService} from '../community-pages-service/explore-service';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {rxResource, toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {switchMap} from 'rxjs';
 import {DatePipe} from '@angular/common';
 
@@ -13,12 +13,18 @@ import {DatePipe} from '@angular/common';
   styleUrl: './commentlist.css',
 })
 export class Commentlist {
-  private service = inject(ExploreService);
+  private eploreService = inject(ExploreService);
 
-  threadId = input.required<string>();
-
+  threadId = input.required({transform: numberAttribute});
+  comments = rxResource(
+    {
+      params: () => this.threadId(),
+      stream: (p) => this.eploreService.getCommentsByThreadId(p.params)
+    }
+  )
+  /*
   comments = toSignal(toObservable(this.threadId).pipe(switchMap(id => this.service.getCommentsByThreadId(+id))
     ),
     { initialValue: [] }
-  );
+  );*/
 }
