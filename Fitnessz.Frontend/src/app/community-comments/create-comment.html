@@ -1,0 +1,39 @@
+<div class="comment-box" [class.expanded]="isExpanded()">
+  <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+
+    <div class="input-wrapper">
+      <textarea
+        formControlName="content"
+        placeholder="Írj egy választ..."
+        (focus)="expand()"
+        [rows]="isExpanded() ? 4 : 1"
+        class="comment-textarea"
+      ></textarea>
+    </div>
+
+    @if (isExpanded()) {
+      <div class="comment-actions">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="collapse()"
+          [disabled]="isSubmitting()"
+        >
+          Mégse
+        </button>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="!canSubmit()"
+        >
+          @if (isSubmitting()) {
+            Küldés...
+          } @else {
+            Válasz küldése
+          }
+        </button>
+      </div>
+    }
+  </form>
+</div>

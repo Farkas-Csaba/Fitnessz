@@ -8,14 +8,25 @@ export interface ThreadObject {
   content?: string | null,
   categoryId : number
 }
+export interface PostObject {
+  content: string,
+  threadId: number
+}
 @Injectable({
   providedIn: 'root',
 })
 export class CreateService {
-  apiUrl = 'https://localhost:5001/ForumThread'
+  threadApiUrl = 'https://localhost:5001/ForumThread';
+  postApiUrl = 'https://localhost:5001/ForumPost'
   http = inject(HttpClient);
   createThread(thread : ThreadObject) : Observable<any>{
-    return this.http.post(this.apiUrl, thread);
+    return this.http.post(this.threadApiUrl, thread);
+  }
+
+  createPost(postContent: PostObject)
+  {
+    const dto = { content: postContent.content };
+    return this.http.post(`${this.postApiUrl}/${postContent.threadId}/posts`, dto);
   }
 
 }

@@ -5,6 +5,13 @@
       <h3 class="comments-title">Válaszok ({{ comments.value()?.length ?? 0 }})</h3>
     </div>
 
+    <div class="comment-entry-area">
+      <app-create-comment
+        [threadId]="threadId()"
+        (commentPosted)="comments.reload()">
+      </app-create-comment>
+    </div>
+
     @if (comments.isLoading()) {
       <div class="loading-state">
         <p>Válaszok betöltése...</p>
@@ -29,7 +36,7 @@
       @if (!comments.isLoading()) {
         <div class="no-comments">
           <p>Még nincsenek válaszok erre a posztra.</p>
-          <p class="subtext">Légy te az első, aki válaszol!</p>
+          <p class="subtext">Légy te az első, aki kommentel!</p>
         </div>
       }
     }

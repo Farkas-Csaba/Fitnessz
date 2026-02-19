@@ -1,25 +1,28 @@
-import {Component, inject, input, numberAttribute} from '@angular/core';
+import {Component, inject, input, numberAttribute, signal} from '@angular/core';
 import {ExploreService} from '../community-pages-service/explore-service';
-import {rxResource, toObservable, toSignal} from '@angular/core/rxjs-interop';
-import {switchMap} from 'rxjs';
+import {rxResource} from '@angular/core/rxjs-interop';
 import {DatePipe} from '@angular/common';
+import {CreateComment} from './create-comment';
 
 @Component({
   selector: 'app-commentlist',
   imports: [
-    DatePipe
+    DatePipe,
+    CreateComment
   ],
   templateUrl: './commentlist.html',
   styleUrl: './commentlist.css',
 })
 export class Commentlist {
-  private eploreService = inject(ExploreService);
+  private exploreService = inject(ExploreService);
+
 
   threadId = input.required({transform: numberAttribute});
   comments = rxResource(
     {
       params: () => this.threadId(),
-      stream: (p) => this.eploreService.getCommentsByThreadId(p.params)
+      stream: (p) => this.exploreService.getCommentsByThreadId(p.params)
     }
   )
+
 }
