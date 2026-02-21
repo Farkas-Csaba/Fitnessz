@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {CreateService, PostObject} from '../community-pages-service/create-service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {AuthService} from '../login-pages-service/auth-service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-comment',
@@ -14,7 +16,9 @@ export class CreateComment {
 
   private readonly fb = inject(FormBuilder);
   private readonly createService = inject(CreateService);
+  private authService = inject(AuthService);
   private snackbar = inject(MatSnackBar);
+  private router = inject(Router);
 
   //read after outputs in docs
   readonly threadId = input.required<number>();
@@ -49,6 +53,12 @@ export class CreateComment {
 
 
   protected expand() {
+    if (!this.authService.isLoggedIn())
+    {
+      this.router.navigate(['bejelentkezes'])
+      this.snackbar.open('Jelentkezz be, hogy kommentelhess!', 'Ok', {duration: 3000})
+    }
+
     this.isExpanded.set(true);
 
   }

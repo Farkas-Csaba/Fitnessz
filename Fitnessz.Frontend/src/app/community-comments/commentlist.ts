@@ -41,7 +41,7 @@ export class Commentlist {
     this.deleteUpdateService.updatePost(threadId, postId, payload).subscribe({
       next: () =>
       {
-        this.snackbar.open('Válasz frissítve!✅ ', 'OK', { duration: 3000 });
+        this.snackbar.open('Válasz frissítve!✅', 'OK', { duration: 3000 });
         this.editingPostId.set(null);
         this.comments.reload();
       },
@@ -62,6 +62,4 @@ export class Commentlist {
       stream: (p) => this.exploreService.getCommentsByThreadId(p.params)
     }
   )
-
-  protected readonly Object = Object;
 }
