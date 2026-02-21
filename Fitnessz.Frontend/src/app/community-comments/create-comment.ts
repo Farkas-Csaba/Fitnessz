@@ -55,8 +55,9 @@ export class CreateComment {
   protected expand() {
     if (!this.authService.isLoggedIn())
     {
-      this.router.navigate(['bejelentkezes'])
+      this.router.navigate(['bejelentkezes'], {queryParams: {returnUrl: `egeszthread/${this.threadId()}`}})
       this.snackbar.open('Jelentkezz be, hogy kommentelhess!', 'Ok', {duration: 3000})
+      return;
     }
 
     this.isExpanded.set(true);
