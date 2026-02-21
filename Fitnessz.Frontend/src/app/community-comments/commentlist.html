@@ -21,6 +21,7 @@
     @for (comment of comments.value(); track comment.postId) {
       <div class="comment-card">
         <div class="comment-header">
+          <app-post-kebab-button [authorName]="comment.authorName" [postId]="comment.postId" [threadId]="threadId()" (deleted)="comments.reload()" (editStarted)="startEdit(comment.postId)"/>
           <div class="avatar">{{ comment.authorName.charAt(0).toUpperCase() }}</div>
           <div class="comment-author-info">
             <span class="comment-author-name">{{ comment.authorName }}</span>
@@ -29,7 +30,21 @@
         </div>
 
         <div class="comment-content">
-          <p>{{ comment.content }}</p>
+          @if(editingPostId() === comment.postId)
+          {
+            <div class="edit-mode-container">
+              <textarea #editInput class="edit-textarea">{{ comment.content }}</textarea>
+              <div class="edit-actions">
+                @if(!isEditing())
+                {
+                  <button class="cancel-btn" (click)="cancelEdit()">Mégse</button>
+                }
+                <button class="save-btn" (click)="saveEdit(this.threadId(),comment.postId, editInput.value)">Mentés</button>
+              </div>
+            </div>
+          } @else {
+            <p>{{ comment.content }}</p>
+          }
         </div>
       </div>
     } @empty {

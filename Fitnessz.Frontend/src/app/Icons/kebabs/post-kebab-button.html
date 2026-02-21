@@ -1,0 +1,20 @@
+@if (isAuthor())
+{
+  <div class="thread-actions">
+    <button class="kebab-btn" (click)="toggleMenu($event)" aria-label="Thread actions">
+      <span class="kebab-icon">⋮</span>
+    </button>
+
+    @if (showMenu()) {
+      <div class="action-dropdown">
+        <button class="dropdown-item" (click)="editPost()">
+          <span class="icon">✏️</span> Szerkesztés
+        </button>
+        <button class="dropdown-item delete" (click)="openPostDeleteModal()">
+          <span class="icon">🗑️</span> Törlés
+        </button>
+      </div>
+    }
+  </div>
+}
+

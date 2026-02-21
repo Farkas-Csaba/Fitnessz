@@ -6,7 +6,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
   template: `
     <div class="custom-dialog-container">
       <h2>Törlés megerősítése</h2>
-      <p>Biztosan véglegesen törölni akarod ezt a posztot?</p>
+      <p>Biztosan véglegesen törölni akarod?</p>
 
       <div class="actions">
         <button (click)="ref.close(false)">Mégse</button>

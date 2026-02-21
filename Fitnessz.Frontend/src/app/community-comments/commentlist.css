@@ -51,6 +51,7 @@
   padding: 20px;
   margin-bottom: 16px;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .comment-card:hover {
@@ -175,4 +176,40 @@
   .comments-title {
     font-size: 18px;
   }
+}
+.edit-textarea {
+  width: 100%;
+  background: #1e1e1e;
+  color: white;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 10px;
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.save-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: none;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
 }
