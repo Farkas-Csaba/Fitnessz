@@ -10,6 +10,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   imports: [],
   templateUrl: './thread-kebab-button.html',
   styleUrl: './thread-kebab-button.css',
+  host: {
+    '(document:click)' : 'closeMenu()'
+  }
+
 })
 export class ThreadKebabButton {
   id = input.required<number>();
@@ -25,7 +29,7 @@ export class ThreadKebabButton {
     event.stopPropagation();
     this.showMenu.update(v => !v);
   }
-  @HostListener('document:click') //this fires regardless of whether closemenu
+
   closeMenu()
   {
     this.showMenu.set(false);

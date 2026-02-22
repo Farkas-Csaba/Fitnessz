@@ -4,13 +4,16 @@ import {Dialog} from '@angular/cdk/dialog';
 import {DeleteConfirmCdk} from '../../ui-components/delete-confirm-cdk';
 import {DeleteUpdateService} from '../../community-pages-service/delete-update-service';
 import {AuthService} from '../../login-pages-service/auth-service';
-import {findAllSubstringIndices} from '@angular/cdk/schematics';
+
 
 @Component({
   selector: 'app-post-kebab-button',
   imports: [],
   templateUrl: './post-kebab-button.html',
   styleUrl: './post-kebab-button.css',
+  host: {
+    '(document:click)' : 'closeMenu()'
+  }
 })
 export class PostKebabButton {
   threadId = input.required<number>();
@@ -35,7 +38,7 @@ export class PostKebabButton {
     this.showMenu.update(v => !v);
   }
 
-  @HostListener('document:click') //is it not a problem that even when the menu is not opened the signal is still fucked with
+
   closeMenu()
   {
     this.showMenu.set(false);
