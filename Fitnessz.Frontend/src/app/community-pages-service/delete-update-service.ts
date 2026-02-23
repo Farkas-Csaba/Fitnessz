@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ThreadObject} from './create-service';
+import {environment} from '../../environment';
 
 export interface updatePostDto {
   content : string
@@ -10,24 +11,23 @@ export interface updatePostDto {
 })
 export class DeleteUpdateService {
   private http = inject(HttpClient)
-  private threadApiUrl = 'https://localhost:5001/ForumThread';
-  private postApiUrl = 'https://localhost:5001/ForumPost';
+  private api = environment.apiUrl;
 
   deleteThread(threadId: number)
   {
-    return this.http.delete<any>(`${this.threadApiUrl}/${threadId}`);
+    return this.http.delete<any>(`${this.api}/ForumThread/${threadId}`);
   }
   deletePost(threadId: number, postId: number)
   {
-    return this.http.delete<any>(`${this.postApiUrl}/${threadId}/posts/${postId}`)
+    return this.http.delete<any>(`${this.api}/ForumPost/${threadId}/posts/${postId}`)
   }
   updateThread(thread: ThreadObject, threadId: number)
   {
-    return this.http.put<any>(`${this.threadApiUrl}/${threadId}`, thread);
+    return this.http.put<any>(`${this.api}/ForumThread/${threadId}`, thread);
   }
   updatePost(threadId : number, postId: number, content : updatePostDto )
   {
-    return this.http.put<any>(`${this.postApiUrl}/${threadId}/posts/${postId}`, content)
+    return this.http.put<any>(`${this.api}/ForumPost/${threadId}/posts/${postId}`, content)
   }
 
 }

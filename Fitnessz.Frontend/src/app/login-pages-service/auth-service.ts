@@ -2,19 +2,19 @@ import {computed, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { tap} from 'rxjs';
 import {Router} from '@angular/router';
+import {environment} from '../../environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  http = inject(HttpClient);
-  apiRoute = "https://localhost:5001/ForumAuth";
-  router = inject(Router);
+  private http = inject(HttpClient);
+  private api = environment.apiUrl;
+  private router = inject(Router);
 
   currentUser = signal<{username : string, token: string} | null>(null);
   isLoggedIn = computed(() => !!this.currentUser());
   constructor() {
-    //should this be an effect?
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedUser = localStorage.getItem('fitness_user');
       if (savedUser) {
@@ -24,7 +24,7 @@ export class AuthService {
   }
   Login (credentials: any )
   {
-    return this.http.post<any>(`${this.apiRoute}/login`, credentials).pipe(
+    return this.http.post<any>(`${this.api}/ForumAuth/login`, credentials).pipe(
       tap(res => {
         this.currentUser.set(res);
         localStorage.setItem("fitness_user", JSON.stringify(res));
@@ -33,7 +33,7 @@ export class AuthService {
   }
   Register(credentials : any)
   {
-    return this.http.post<any>(`${this.apiRoute}/register`, credentials).pipe(
+    return this.http.post<any>(`${this.api}/ForumAuth/register`, credentials).pipe(
       tap(res=>{
         this.currentUser.set(res);
         localStorage.setItem("fitness_user", JSON.stringify(res));
