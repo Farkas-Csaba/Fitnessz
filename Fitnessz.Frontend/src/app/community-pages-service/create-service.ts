@@ -26,7 +26,7 @@ export class CreateService {
   createPost(postContent: PostObject)
   {
     const dto = { content: postContent.content };
-    return this.http.post(`${this.api}/ForumPost${postContent.threadId}/posts`, dto);
+    return this.http.post(`${this.api}/ForumPost/${postContent.threadId}/posts`, dto);
   }
 
 }

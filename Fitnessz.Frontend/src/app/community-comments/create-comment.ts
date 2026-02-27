@@ -84,7 +84,7 @@ export class CreateComment {
         this.collapse();
         this.isSubmitting.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting.set(false);
         this.snackbar.open("Nem sikerült a kommentelés, kérem próbálja újra  ❌", "bezárás", {
           duration: 3000
