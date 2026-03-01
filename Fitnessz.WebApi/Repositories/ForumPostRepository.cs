@@ -25,7 +25,7 @@ public class ForumPostRepository : IForumPostRepository
         return await db.Posts
             .Include(p => p.User)
             .Where(p => p.ThreadId == threadId)
-            .OrderBy(p => p.CreatedAt)
+            .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
     }
 
