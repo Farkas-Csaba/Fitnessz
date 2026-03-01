@@ -5,6 +5,7 @@ using Fitnessz.WebApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 
 namespace Fitnessz.WebApi;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
