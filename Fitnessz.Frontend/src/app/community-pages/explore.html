@@ -1,14 +1,14 @@
 <div class="explore-container">
   <div class="thread-list">
 
-    @if (threads.isLoading()) {
+    @if (currentThreads.isLoading() && threadPreviews().length === 0) {
       <div class="loading-text">
         <p>Posztok betöltése...</p>
       </div>
     }
 
 
-    @for (thread of threads.value(); track thread.threadId) {
+    @for (thread of threadPreviews(); track thread.threadId) {
       <div class="thread-card" (click)="goToThread(thread)">
         <div class="card-header">
           <span class="category-badge">{{ thread.categoryName }}</span>
@@ -26,6 +26,32 @@
         </div>
       </div>
     }
+    @empty {
+        @if (!currentThreads.isLoading()) {
+          <div class="empty-state">
+            <p>Még nincsenek posztok ebben a kategóriában.</p>
+          </div>
+        }
+      }
+
+      <div class="pagination-footer">
+        @if (currentThreads.isLoading() && threadPreviews().length > 0) {
+          <div class="loading-more">
+            <p>További posztok betöltése...</p>
+          </div>
+        }
+
+        @if (hasMore()) {
+          <div #anchor class="scroll-anchor">
+            @if (currentThreads.isLoading()) {
+              <div class="spinner">Töltés...</div>
+            }
+          </div>
+        } @else if (threadPreviews().length > 0) {
+          <p class="end-message">Elérted a lista végét.</p>
+        }
+      </div>
+
   </div>
 </div>
 <app-create-thread-button/>

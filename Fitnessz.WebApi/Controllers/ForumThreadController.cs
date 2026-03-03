@@ -206,4 +206,25 @@ public class ForumThreadController : ControllerBase
 
         return Ok(response);
     }
+    //Controllers for pagination 
+    [HttpGet("posts-keyset")]
+    public async Task<IActionResult> GetAllThreadsPaginated([FromQuery] int reference = 0,
+        [FromQuery] int pageSize = 10)
+    {
+        var pagedResult = await threadRepo.GetThreadsKeysetAsync(reference, pageSize);
+        var response = pagedResult.Data.Select(t => new ThreadExploreDto()
+        {
+            ThreadId = t.ThreadId,
+            AuthorName = t.User.UserName ?? "Anonymus",
+            CategoryName = t.Category.Name,
+            Title = t.Title,
+            CreatedAt = t.CreatedAt,
+            ContentPreview = t.Content?.Length > 100 ? t.Content.Substring(0, 100) + "..." : t.Content ?? ""
+        });
+        return Ok(new
+        {
+            data = response,
+            nextReference = pagedResult.Reference
+        });
+    }
 }

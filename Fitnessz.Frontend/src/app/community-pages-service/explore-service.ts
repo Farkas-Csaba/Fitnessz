@@ -11,7 +11,11 @@ export interface ThreadPreview{
   authorName: string,
   categoryName: string,
   contentPreview : string,
-  createdAt: string
+  createdAt: string,
+}
+export interface ThreadPreviewObject{
+  data : ThreadPreview[],
+  nextReference : number
 }
 export interface Thread{
   threadId : number,
@@ -42,8 +46,12 @@ export class ExploreService {
     this.router.navigate(['egeszthread', thread.threadId]);
   }
 
-  getExplorePageThreads (){
-    return this.http.get<ThreadPreview[]>(`${this.api}/ForumThread`);
+  getExplorePageThreads (reference : number = 0, pageSize : number = 10){
+    return this.http.get<ThreadPreviewObject>(`${this.api}/ForumThread/posts-keyset`, {params: {
+        reference: reference.toString(),
+        pageSize: pageSize.toString()
+
+      }});
   }
 
   getThreadsByCategory(categoryId : number) {

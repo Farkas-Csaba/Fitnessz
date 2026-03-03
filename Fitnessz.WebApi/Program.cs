@@ -47,7 +47,7 @@ public class Program
         {
             options.AddPolicy("AllowAngular", policy =>
             {
-                policy.WithOrigins("https://fitnessz-three.vercel.app")
+                policy.WithOrigins("http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
