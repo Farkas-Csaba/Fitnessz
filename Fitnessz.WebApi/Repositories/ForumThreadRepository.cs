@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Fitnessz.Common.DataContext;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.DTOs.PaginationDTO;
@@ -15,6 +16,7 @@ public interface IThreadRepository
     Task<IEnumerable<ForumThread>> ListAllAsync(); //What can be null here
     Task<IEnumerable<ForumThread>> ListAllByCategoryAsync(int categoryId);
     Task<PagedResponseKeyset<ForumThread>> GetThreadsKeysetAsync(int reference, int pageSize);
+    Task<PagedResponseKeyset<ForumThread>> GetThreadsByCategoryIdKeysetAsync(int categoryId, int reference, int pageSize);
 
 }
 
@@ -103,6 +105,27 @@ public class ForumThreadRepository : IThreadRepository
         }
 
         var nextReference = threads.Any() ? threads.Last().ThreadId : -1;
+        return new PagedResponseKeyset<ForumThread>(threads, nextReference);
+    }
+
+    public async Task<PagedResponseKeyset<ForumThread>> GetThreadsByCategoryIdKeysetAsync(int categoryId, int reference, int pageSize)
+    {
+        var query = db.ForumThreads.AsNoTracking()
+            .Include(t => t.User)
+            .Include(t => t.Category)
+            .OrderByDescending(t => t.ThreadId);
+        List<ForumThread> threads;
+        if (reference <= 0)
+        {
+            threads = await query.Take(pageSize).ToListAsync();
+        }
+        else
+        {
+            threads = await query.Where(t => t.CategoryId == categoryId).Where(p => p.ThreadId < reference)
+                .ToListAsync();
+        }
+
+        int nextReference = threads.Any() ? threads.Last().ThreadId : -1;
         return new PagedResponseKeyset<ForumThread>(threads, nextReference);
     }
 }

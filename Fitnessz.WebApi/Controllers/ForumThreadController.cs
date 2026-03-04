@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Fitnessz.WebApi.DTOs;
+using Fitnessz.WebApi.DTOs.PaginationDTO;
+
 namespace Fitnessz.WebApi.Controllers;
 
 [ApiController]
@@ -226,5 +228,31 @@ public class ForumThreadController : ControllerBase
             data = response,
             nextReference = pagedResult.Reference
         });
+    }
+
+    [HttpGet("{categoryId}/posts-keyset")]
+    public async Task<IActionResult> GetAllThreadByCategoryPaginated(int categoryId,[FromQuery] int reference = 0, int pageSize = 10)
+    {
+        if (!await categoryRepo.CategoryExists(categoryId))
+        {
+            return BadRequest("Category does not exist");
+        }
+        var pagedResult = await threadRepo.GetThreadsByCategoryIdKeysetAsync(categoryId, reference, pageSize);
+        var data = pagedResult.Data.Select(t => new ThreadExploreDto()
+            {
+                ThreadId = t.ThreadId,
+                AuthorName = t.User.UserName ?? "Anonymus",
+                CategoryName = t.Category.Name,
+                Title = t.Title,
+                CreatedAt = t.CreatedAt,
+                ContentPreview = t.Content?.Length > 100 ? t.Content.Substring(0, 100) + "..." : t.Content ?? ""
+            }
+        );
+        return Ok(new
+        {
+            data = data,
+            nextReference = pagedResult.Reference
+        });
+
     }
 }

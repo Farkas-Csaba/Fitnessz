@@ -1,14 +1,7 @@
 <div class="explore-container">
   <div class="thread-list">
 
-    @if (threads.isLoading()) {
-      <div class="loading-text">
-        <p>Posztok betöltése...</p>
-      </div>
-    }
-
-
-    @for (thread of threads.value(); track thread.threadId) {
+    @for (thread of threadPreviews(); track thread.threadId) {
       <div class="thread-card" (click)="goToThread(thread)">
         <div class="card-header">
           <span class="category-badge">{{ thread.categoryName }}</span>
@@ -25,7 +18,20 @@
           <span class="date">{{ thread.createdAt | date:'yyyy. MMM dd.' }}</span>
         </div>
       </div>
+    } @empty {
+      @if (!threadsResource.isLoading()) {
+        <p class="empty-state">Ebben a kategóriában még nincsenek posztok.</p>
+      }
     }
+    @if (hasMore()) {
+      <div #anchor class="scroll-anchor">
+        @if (threadsResource.isLoading()) {
+          <div class="spinner">Töltés...</div>
+        }
+      </div>
+    }@else if (threadPreviews().length > 0) {
+    <p class="end-message">Jelenleg nincs több poszt ebben a kategóriában.</p>
+  }
   </div>
 </div>
 <app-create-thread-button/>

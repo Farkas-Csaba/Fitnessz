@@ -53,11 +53,12 @@ export class ExploreService {
 
       }});
   }
-
-  getThreadsByCategory(categoryId : number) {
-    return this.http.get<ThreadPreview[]>(`${this.api}/ForumThread/category/${categoryId}`);
+  getThreadsByCategory(categoryId : number, reference : number = 0, pageSize : number = 10) {
+    return this.http.get<ThreadPreviewObject>(`${this.api}/ForumThread/${categoryId}/posts-keyset`, {params: {
+        reference: reference.toString(),
+        pageSize: pageSize.toString()
+      }});
   }
-
   getFullThreadByThreadID(threadId: number)
   {
     return this.http.get<Thread>(`${this.api}/ForumThread/${threadId}`);
