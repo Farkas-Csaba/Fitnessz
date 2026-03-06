@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-api-name.aws-region.myapp.com' //dummy api
+  apiUrl: 'https://fitnessz-forum-a2abb4g9bbc0d2fn.polandcentral-01.azurewebsites.net'
 };
