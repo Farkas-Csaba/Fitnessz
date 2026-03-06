@@ -1,4 +1,5 @@
 using System.Text;
+using Azure.Identity;
 using Fitnessz.Common.DataContext;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.Repositories;
@@ -6,16 +7,26 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 namespace Fitnessz.WebApi;
 using Microsoft.EntityFrameworkCore;
 public class Program
 {
     public static void Main(string[] args)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         var builder = WebApplication.CreateBuilder(args);
-
-        var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("connectionString postgresConnection not found");
+        
+        if (builder.Environment.IsProduction())
+        {
+            // Make sure "KeyVaultName" matches exactly what you put in App Service Env Variables
+            var vaultName = builder.Configuration["KeyVaultName"];
+            var vaultUri = new Uri($"https://{vaultName}.vault.azure.net/");
+    
+            builder.Configuration.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
+            
+        }
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("connectionString postgresConnection not found");
         builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
 
         builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
@@ -59,12 +70,13 @@ public class Program
         builder.Services.AddScoped<IForumPostRepository, ForumPostRepository>();
         builder.Services.AddScoped<IForumCategory, ForumCategoryRepository>(); //Added after creating the interface and repository
         var app = builder.Build();
-
+        
+        app.MapOpenApi();
+        app.MapScalarApiReference();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference();
+            
         }
 
         app.UseHttpsRedirection();
