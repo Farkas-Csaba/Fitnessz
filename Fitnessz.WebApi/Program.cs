@@ -56,9 +56,9 @@ public class Program
        
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowAngular", policy =>
+            options.AddPolicy("AllowVercel", policy =>
             {
-                policy.WithOrigins("http://localhost:4200")
+                policy.SetIsOriginAllowed(origin => origin.Contains("vercel.app"))
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -81,7 +81,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseCors("AllowAngular"); 
+        app.UseCors("AllowVercel"); 
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
