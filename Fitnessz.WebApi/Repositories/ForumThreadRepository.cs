@@ -113,6 +113,7 @@ public class ForumThreadRepository : IThreadRepository
         var query = db.ForumThreads.AsNoTracking()
             .Include(t => t.User)
             .Include(t => t.Category)
+            .Where(t => t.CategoryId == categoryId)
             .OrderByDescending(t => t.ThreadId);
         List<ForumThread> threads;
         if (reference <= 0)
@@ -121,7 +122,7 @@ public class ForumThreadRepository : IThreadRepository
         }
         else
         {
-            threads = await query.Where(t => t.CategoryId == categoryId).Where(p => p.ThreadId < reference)
+            threads = await query.Where(p => p.ThreadId < reference)
                 .ToListAsync();
         }
 
@@ -129,3 +130,4 @@ public class ForumThreadRepository : IThreadRepository
         return new PagedResponseKeyset<ForumThread>(threads, nextReference);
     }
 }
+
