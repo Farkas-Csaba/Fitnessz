@@ -16,17 +16,23 @@ public class Program
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         var builder = WebApplication.CreateBuilder(args);
-        
+        string? connectionString;
+
         if (builder.Environment.IsProduction())
         {
-            // Make sure "KeyVaultName" matches exactly what you put in App Service Env Variables
             var vaultName = builder.Configuration["KeyVaultName"];
             var vaultUri = new Uri($"https://{vaultName}.vault.azure.net/");
-    
             builder.Configuration.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
-            
+    
+            connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         }
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("connectionString postgresConnection not found");
+        else
+        {
+            connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        }
+        if (string.IsNullOrEmpty(connectionString)) 
+            throw new Exception("Connection string not found in any provider!");
+
         builder.Services.AddDbContext<ForumDbContext>(options => options.UseNpgsql(connectionString));
 
         builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
@@ -58,7 +64,10 @@ public class Program
         {
             options.AddPolicy("AllowVercel", policy =>
             {
-                policy.SetIsOriginAllowed(origin => origin.Contains("vercel.app"))
+                policy.WithOrigins("http://localhost:4200") 
+                    .SetIsOriginAllowed(origin => 
+                        origin.Contains("vercel.app") || 
+                        origin.Contains("localhost"))
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
