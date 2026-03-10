@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fitnessz.WebApi.Controllers;
@@ -55,8 +57,9 @@ public class ForumAuthController : ControllerBase
             await _userManagerRepo.AddToRoleAsync(user, "User");
             var roles = new List<string> { "User" };
             var token = GenerateJwtToken(user, roles);
-
-            return Ok(new {token = token, username = user.UserName });
+            var refreshtoken = Guid.NewGuid().ToString();
+            await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", refreshtoken);
+            return Ok(new {token = token, refreshToken = refreshtoken, username = user.UserName });
         }
         catch (Exception ex)
         {
@@ -76,11 +79,50 @@ public class ForumAuthController : ControllerBase
         if (!result) return Unauthorized("Invalid credentials");
 
         var roles = await _userManagerRepo.GetRolesAsync(user);
-        var token = GenerateJwtToken(user, roles);
+        var accesstoken = GenerateJwtToken(user, roles);
+        var refreshtoken = Guid.NewGuid().ToString();
 
-        return Ok(new { token = token, username = user.UserName });
+        await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", refreshtoken);
+
+        return Ok(new { token = accesstoken, refreshToken = refreshtoken, username = user.UserName });
     }
 
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> Refresh(TokenRequestDTO tokenDto)
+    {
+        var user = await _userManagerRepo.Users.FirstOrDefaultAsync(u => u.UserName == tokenDto.UserName);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var savedToken = await _userManagerRepo.GetAuthenticationTokenAsync(user, "Default", "RefreshToken");
+        if (savedToken != tokenDto.RefreshToken)
+            return Unauthorized("Invalid refresh token");
+        var roles = await _userManagerRepo.GetRolesAsync(user);
+        var newAccessToken = GenerateJwtToken(user, roles);
+        var newRefreshToken = Guid.NewGuid().ToString();
+
+        // 3. Update the database with the new refresh token (Rotation)
+        await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", newRefreshToken);
+
+        return Ok(new { 
+            token = newAccessToken, 
+            refreshToken = newRefreshToken 
+        });
+    }
+    
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var user = await _userManagerRepo.GetUserAsync(User);
+        if (user == null) return BadRequest();
+
+        await _userManagerRepo.RemoveAuthenticationTokenAsync(user, "Default", "RefreshToken");
+
+        return Ok();
+    }
     private string GenerateJwtToken(User user, IList<string> roles)
     {
         var claims = new List<Claim>
@@ -101,7 +143,7 @@ public class ForumAuthController : ControllerBase
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddHours(1),
+            expires: DateTime.UtcNow.AddMinutes(1),
             signingCredentials: creds
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
