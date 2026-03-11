@@ -24,6 +24,7 @@ export class AuthService {
   constructor() {
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedUser = localStorage.getItem('fitness_user');
+      console.log(savedUser)
       if (savedUser) {
         this.currentUser.set(JSON.parse(savedUser));
       }
@@ -31,29 +32,28 @@ export class AuthService {
   }
   private handleAuth(res: UserSession) {
     this.currentUser.set(res);
-    localStorage.setItem("fitness_user", JSON.stringify(res.token));
+    localStorage.setItem("fitness_user", JSON.stringify(res));
   }
   Login (credentials: any )
   {
-    return this.http.post<any>(`${this.api}/ForumAuth/login`, credentials, {withCredentials: true}).pipe(
+    return this.http.post<UserSession>(`${this.api}/ForumAuth/login`, credentials, {withCredentials: true}).pipe(
       tap(res => this.handleAuth(res) )
     );
   }
   Register(credentials : any)
   {
-    return this.http.post<any>(`${this.api}/ForumAuth/register`, credentials, {withCredentials: true}).pipe(
+    return this.http.post<UserSession>(`${this.api}/ForumAuth/register`, credentials, {withCredentials: true}).pipe(
       tap(res=>this.handleAuth(res))
     );
   }
   RefreshToken() {
-    const user = this.currentUser();
     const payload = {
-      userName: user?.username
+      UserName: this.currentUser()?.username
     };
-
+    console.log(payload)
     return this.http.post<TokenObject>(`${this.api}/ForumAuth/Refresh`, payload, {withCredentials: true}).pipe(
       tap(res  => {
-        const updatedSession = {username: user!.username, token: res.token}
+        const updatedSession = {username: this.currentUser()!.username, token: res.token}
         this.handleAuth(updatedSession)
       })
     );
