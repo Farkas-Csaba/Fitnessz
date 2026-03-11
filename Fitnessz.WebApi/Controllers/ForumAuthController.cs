@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Fitnessz.Common.EntityModel;
 using Fitnessz.WebApi.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -59,7 +60,8 @@ public class ForumAuthController : ControllerBase
             var token = GenerateJwtToken(user, roles);
             var refreshtoken = Guid.NewGuid().ToString();
             await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", refreshtoken);
-            return Ok(new {token = token, refreshToken = refreshtoken, username = user.UserName });
+            SetRefreshToken(refreshtoken);
+            return Ok(new {token = token, username = user.UserName });
         }
         catch (Exception ex)
         {
@@ -83,21 +85,36 @@ public class ForumAuthController : ControllerBase
         var refreshtoken = Guid.NewGuid().ToString();
 
         await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", refreshtoken);
+        SetRefreshToken(refreshtoken);
 
-        return Ok(new { token = accesstoken, refreshToken = refreshtoken, username = user.UserName });
+        return Ok(new { token = accesstoken, username = user.UserName });
     }
 
-    [HttpPost("Refresh")]
-    public async Task<IActionResult> Refresh(TokenRequestDTO tokenDto)
+    private void SetRefreshToken(string refreshtToken)
     {
-        var user = await _userManagerRepo.Users.FirstOrDefaultAsync(u => u.UserName == tokenDto.UserName);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            IsEssential = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(7)
+        };
+        Response.Cookies.Append("refreshToken", refreshtToken, cookieOptions);
+    }
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequestDTO refreshDto)
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+        if (string.IsNullOrEmpty(refreshToken)) return Unauthorized("No refresh token");
+        var user = await _userManagerRepo.FindByNameAsync(refreshDto.UserName);
         if (user == null)
         {
             return Unauthorized();
         }
 
         var savedToken = await _userManagerRepo.GetAuthenticationTokenAsync(user, "Default", "RefreshToken");
-        if (savedToken != tokenDto.RefreshToken)
+        if (savedToken != refreshToken)
             return Unauthorized("Invalid refresh token");
         var roles = await _userManagerRepo.GetRolesAsync(user);
         var newAccessToken = GenerateJwtToken(user, roles);
@@ -105,22 +122,21 @@ public class ForumAuthController : ControllerBase
 
         // 3. Update the database with the new refresh token (Rotation)
         await _userManagerRepo.SetAuthenticationTokenAsync(user, "Default", "RefreshToken", newRefreshToken);
-
+        SetRefreshToken(newRefreshToken);
         return Ok(new { 
-            token = newAccessToken, 
-            refreshToken = newRefreshToken 
+            token = newAccessToken
         });
     }
     
-    [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
+        Response.Cookies.Delete("refreshToken");
         var user = await _userManagerRepo.GetUserAsync(User);
-        if (user == null) return BadRequest();
-
-        await _userManagerRepo.RemoveAuthenticationTokenAsync(user, "Default", "RefreshToken");
-
+        if (user != null)
+        {
+            await _userManagerRepo.RemoveAuthenticationTokenAsync(user, "Default", "RefreshToken");
+        }
         return Ok();
     }
     private string GenerateJwtToken(User user, IList<string> roles)

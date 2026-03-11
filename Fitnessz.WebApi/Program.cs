@@ -57,19 +57,20 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             });
-        
     
        
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowVercel", policy =>
             {
-                policy.WithOrigins("http://localhost:4200") 
-                    .SetIsOriginAllowed(origin => 
-                        origin.Contains("vercel.app") || 
+                policy.WithOrigins("http://localhost:4200")
+                    .SetIsOriginAllowed(origin =>
+                        origin.Contains("vercel.app") ||
                         origin.Contains("localhost"))
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+
             });
         });
         builder.Services.AddControllers();

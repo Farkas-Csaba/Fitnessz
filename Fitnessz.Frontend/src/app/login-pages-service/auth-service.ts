@@ -4,6 +4,13 @@ import { tap} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../environment';
 
+export interface UserSession{
+  username: string,
+  token: string
+}
+export interface TokenObject{
+  token: string
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -22,25 +29,37 @@ export class AuthService {
       }
     }
   }
+  private handleAuth(res: UserSession) {
+    this.currentUser.set(res);
+    localStorage.setItem("fitness_user", JSON.stringify(res.token));
+  }
   Login (credentials: any )
   {
-    return this.http.post<any>(`${this.api}/ForumAuth/login`, credentials).pipe(
-      tap(res => {
-        this.currentUser.set(res);
-        localStorage.setItem("fitness_user", JSON.stringify(res));
-      } )
+    return this.http.post<any>(`${this.api}/ForumAuth/login`, credentials, {withCredentials: true}).pipe(
+      tap(res => this.handleAuth(res) )
     );
   }
   Register(credentials : any)
   {
-    return this.http.post<any>(`${this.api}/ForumAuth/register`, credentials).pipe(
-      tap(res=>{
-        this.currentUser.set(res);
-        localStorage.setItem("fitness_user", JSON.stringify(res));
+    return this.http.post<any>(`${this.api}/ForumAuth/register`, credentials, {withCredentials: true}).pipe(
+      tap(res=>this.handleAuth(res))
+    );
+  }
+  RefreshToken() {
+    const user = this.currentUser();
+    const payload = {
+      userName: user?.username
+    };
+
+    return this.http.post<TokenObject>(`${this.api}/ForumAuth/Refresh`, payload, {withCredentials: true}).pipe(
+      tap(res  => {
+        const updatedSession = {username: user!.username, token: res.token}
+        this.handleAuth(updatedSession)
       })
     );
   }
   Logout(){
+
     this.currentUser.set(null);
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem("fitness_user");

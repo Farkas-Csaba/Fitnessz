@@ -1,7 +1,6 @@
 namespace Fitnessz.WebApi.DTOs;
 
-public class TokenRequestDTO
+public class RefreshRequestDTO
 {
     public required string UserName { get; set; }
-    public required string RefreshToken { get; set; }
 }
