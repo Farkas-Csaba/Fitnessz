@@ -24,7 +24,6 @@ export class AuthService {
   constructor() {
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedUser = localStorage.getItem('fitness_user');
-      console.log(savedUser)
       if (savedUser) {
         this.currentUser.set(JSON.parse(savedUser));
       }
@@ -50,7 +49,6 @@ export class AuthService {
     const payload = {
       UserName: this.currentUser()?.username
     };
-    console.log(payload)
     return this.http.post<TokenObject>(`${this.api}/ForumAuth/Refresh`, payload, {withCredentials: true}).pipe(
       tap(res  => {
         const updatedSession = {username: this.currentUser()!.username, token: res.token}

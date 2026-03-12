@@ -106,7 +106,7 @@ public class ForumAuthController : ControllerBase
     public async Task<IActionResult> Refresh(RefreshRequestDTO refreshDto)
     {
         var refreshToken = Request.Cookies["refreshToken"];
-        if (string.IsNullOrEmpty(refreshToken)) return Unauthorized("No refresh token");
+        if (string.IsNullOrEmpty(refreshToken)) return Unauthorized();
         var user = await _userManagerRepo.FindByNameAsync(refreshDto.UserName);
         if (user == null)
         {
@@ -115,7 +115,10 @@ public class ForumAuthController : ControllerBase
 
         var savedToken = await _userManagerRepo.GetAuthenticationTokenAsync(user, "Default", "RefreshToken");
         if (savedToken != refreshToken)
-            return Unauthorized("Invalid refresh token");
+        {
+            return Unauthorized();
+        }
+            
         var roles = await _userManagerRepo.GetRolesAsync(user);
         var newAccessToken = GenerateJwtToken(user, roles);
         var newRefreshToken = Guid.NewGuid().ToString();
